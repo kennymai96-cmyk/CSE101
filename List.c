@@ -58,12 +58,12 @@ List newList(void){
 // freeList()
 // Frees heap memory associated with *pL, sets *pL to NULL.
 void freeList(List* pL){
-    if(pL != NULL && *pL != NULL) { // check for NULL condition on the address and content of 
-        while(!isEmpty(*pL)) {
+    if(pL != NULL && *pL != NULL) { // check for NULL condition on the address and content of list 
+        while(length(*pL) > 1) { // delete contents while the list still has data
             delete(*pL);
         }
-        free(*pL);
-        *pL = NULL;
+        free(*pL); // let my memory be free
+        *pL = NULL; // deinit *pL
     }
 }
 
