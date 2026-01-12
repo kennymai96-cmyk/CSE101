@@ -154,4 +154,8 @@ List join(List A, List B);
 // Pre: length(L)>0, position(L)>=0
 List split(List L);
 
+
+// test list prototype
+List makeTestList(ListElement data1, ListElement data2);
+
 #endif
