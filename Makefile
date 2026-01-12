@@ -11,7 +11,7 @@
 MAIN           = Words
 MAINOBJ        = $(MAIN).o
 MAINSRC        = $(MAIN).c
-TEST           = ListClient
+TEST           = ModelListTest.c
 TESTOBJ        = $(TEST).o
 TESTSRC        = $(TEST).c
 ADT            = List
