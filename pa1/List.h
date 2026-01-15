@@ -1,10 +1,5 @@
-//-----------------------------------------------------------------------------
-// Kenny Mai
-// kemai
-// 2026 Winter CSE101 PA1
-// List.h
 // Header file for List ADT
-//-----------------------------------------------------------------------------
+
 
 #ifndef LIST_H //header guard for single define of List.h
 #define LIST_H

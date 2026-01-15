@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
         free(words[i]);
     }
 
-    //free(words); // free memory of dynamic string array
+    free(words); // free memory of dynamic string array
     freeList(&L); // free memory of the ordered list
     fclose(in); // close the input file
     fclose(out); // close the output file
