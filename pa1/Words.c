@@ -17,7 +17,7 @@
 
 int main(int argc, char *argv[]) {  // check for valid amount of inputs: input file, output file and file name
     
-    fprintf(stderr, "START\n");
+    // fprintf(stderr, "START\n");
 
     if (argc != 3) {
         fprintf(stderr, "Usage: %s <input file> <output file>\n", argv[0]);
@@ -123,8 +123,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
         }
     }
 
-
-    fprintf(stderr, "PRINTING\n");
+    // fprintf(stderr, "PRINTING\n");
 
     printList(out, L); // print indices of the sorted list
     fprintf(out, "\n");
@@ -133,7 +132,12 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
         fprintf(out, "%s\n", words[get(L)]);
     }
 
-    free(words); // free moemory of dynamic string array
+    
+    for(int i = 0; i < count; i++) {
+        free(words[i]);
+    }
+
+    //free(words); // free memory of dynamic string array
     freeList(&L); // free memory of the ordered list
     fclose(in); // close the input file
     fclose(out); // close the output file
