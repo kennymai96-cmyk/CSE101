@@ -1,35 +1,12 @@
-# cse101-pt.f23/pa2
+README.md 
 
-The following is a set of performance tests to run on your FindPath program. It
-takes six example input files and compares your results to our correct model
-outputs. It also includes a testing client for your List and Graph ADT's as per
-the requirements of PA2. We have made this available to you to check your work
-before making your final submission.
+List.h - Header file for List ADT
+List.c  - Implementation file for List ADT
+ListTest.c - Self-created tests for LIST ADT functions
+Words.c - Top-level file for List ADT
+Makefile - Makefile for LIST ADT
 
-## Usage
-
-```bash
-chmod +x ./../cse-101-public-tests/pa2/pa2.sh
-./../cse-101-public-tests/pa2/pa2.sh
-```
-
-The FindPath tests will print out the difference between your output and the correct output,
-using the `diff` command. Lack of any output between the set of "=========="
-means that your program is running correctly.
-
-Any lines prefixed with `-` are from your own output, and are incorrect. Any
-lines prefixed with `+` are from the correct output, and are missing in your
-output.
-
-The ListTest and GraphTest will list all of unit tests they perform and which
-you've passed/failed.
-
-## Removal
-
-The following command will remove all text files and shell scripts in your
-directory. Since you should not have any files that end in `.txt` or `.sh`
-anyway, this should serve to delete all the files we gave you.
-
-```bash
-rm -f *.txt *.sh
-```
+AI Chat Log URLS
+List.h - https://chatgpt.com/c/69605064-5854-8330-8261-c396c2d362c6
+List.c - https://chatgpt.com/c/69606f6a-4d34-832f-9d53-f3ce7906c644
+Words.c - https://chatgpt.com/c/69643aad-3a70-832e-9c9d-7c1281563bf3
