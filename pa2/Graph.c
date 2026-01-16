@@ -12,7 +12,12 @@
 #include <assert.h>
 #include "List.h"
 
-
+typedef struct GraphObj {
+    int order; // define int holding order of graph(# of vertices)
+    int arcs; // define int holding # of directed edges
+    char* v_label; // define string pointer holding most recent source for BFS
+    
+}
 
 // constructors - destructors -------------------------------------------------
 

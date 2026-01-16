@@ -2,8 +2,9 @@
 
 #ifndef GRAPH_H //header guard for single define of GRAPH.h
 #define GRAPH_H
-#define INF 
-#define NIL
+
+#define INF -1 // define INF
+#define NIL 0 // define NIL
 
 #include <stdio.h> //required libraries
 #include <stdbool.h>
