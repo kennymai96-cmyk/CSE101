@@ -3,11 +3,16 @@
 #ifndef GRAPH_H //header guard for single define of GRAPH.h
 #define GRAPH_H
 
-#define INF -1 // define INF
-#define NIL 0 // define NIL
+// define ADT-specific literals
+#define INF -1 
+#define NIL 0 
+#define WHITE 0
+#define GRAY  1
+#define BLACK 2
 
 #include <stdio.h> //required libraries
 #include <stdbool.h>
+#include "List.h"
 
 // Graph is a pointer to a GraphObj created withing Graph.c
 typedef struct GraphObj* Graph;
@@ -82,3 +87,5 @@ void BFS(Graph G, int s);
 // printGraph()
 // Prints the adjacency list representation of G to FILE* out.
 void printGraph(FILE* out, Graph G);
+
+#endif
