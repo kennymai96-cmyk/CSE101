@@ -43,9 +43,9 @@ Graph newGraph(int n) {
     G->v_parent = malloc((n + 1) * sizeof(int));
     G->v_dist = malloc((n + 1) * sizeof(int));
     G->v_neighbors = malloc((n + 1) * sizeof(List));
-    // 
+    // check for valid arrays
     assert(G->v_color && G->v_parent && G->v_dist && G->v_neighbors);
-    // init each element of arrays
+    // init each element of arrays(start at 1, 0 is NIL)
     for (int i = 1; i <= n; i++) {
         G->v_color[i]     = WHITE;
         G->v_parent[i]    = NIL;
@@ -156,17 +156,90 @@ int getDist(Graph G, int u) {
 // If vertex u is reachable from the source, appends the vertices of a shortest
 // source-u path to List L. Otherwise, appends NIL to L.
 // Pre: 1 <= u <= getOrder(G), getSource(G) != NIL
-void getPath(List L, Graph G, int u);
+void getPath(List L, Graph G, int u) {
+    if(G == NULL) { // check that list exists
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+
+
+}
 
 // manipulation procedures ----------------------------------------------------
 // makeNull()
 // Resets G to its initial state.
-void makeNull(Graph G);
+void makeNull(Graph G) {
+    if(G == NULL) { // check that list exists
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // init all ints
+    G->u_edge = 0;
+    G->d_edge = 0; 
+    G->v_source = NIL; 
+    // check for valid arrays
+    assert(G->v_color && G->v_parent && G->v_dist && G->v_neighbors);
+    // init each element of arrays
+    for (int i = 1; i <= G->order; i++) {
+        G->v_color[i]     = WHITE;
+        G->v_parent[i]    = NIL;
+        G->v_dist[i]      = INF;
+        G->v_neighbors[i] = newList();
+    }
+}
 
 // addEdge()
 // Creates an undirected edge joining vertex u to vertex v.
 // Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
-void addEdge(Graph G, int u, int v);
+void addEdge(Graph G, int u, int v) {
+    if(G == NULL) { // check that list exists
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertices
+    if (!(1 <= u && u <= getOrder(G) && 1 <= v && v <= getOrder(G))) {
+        fprintf(stderr, "Invalid vertices!\n");
+        exit(EXIT_FAILURE);
+    }
+    // assign alias for u adj list
+    List u_adj = G->v_neighbors[u];
+    List v_adj = G->v_neighbors[v];
+    if(position(u_adj) == -1 || position(v_adj) == -1) { // if list is empty, insert the neighbor
+        append(u_adj, v);  
+        append(v_adj, u);    
+        moveFront(u_adj); // place cursor at front for subsequent insertions
+        moveFront(v_adj); // place cursor at front for subsequent insertions
+    }
+    else{
+        for(int i = 1; i < G->order; i++) {
+            if(v < get(u_adj)) {
+                insertBefore(u_adj, v);
+                break;
+            }
+            else{
+                moveNext(u_adj);
+            }
+            if(u < get(v_adj)) {
+                insertBefore(v_adj, u);
+                break;
+            }
+            else{
+                moveNext(v_adj);
+            }
+        }
+    }
+
+    // update edge count
+    G->u_edge++;
+
+
+    /*int u_adj = front(G->v_neighbors[u]);
+    printf("Vertex is %d\n", u_adj);
+
+    int v_adj = front(G->v_neighbors[v]);
+    printf("Vertex is %d\n", v_adj); */
+
+}   
 
 // addArc()
 // Creates a directed edge joining vertex u to vertex v.
@@ -180,4 +253,14 @@ void BFS(Graph G, int s);
 
 // printGraph()
 // Prints the adjacency list representation of G to FILE* out.
-void printGraph(FILE* out, Graph G);
+void printGraph(FILE* out, Graph G) {
+    if(G == NULL) { // check that list exists
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for(int i = 1; i < G->order; i++) {
+        printf("%d: ", i);
+        printList(stdout, G->v_neighbors[i]);
+    } 
+}

@@ -15,10 +15,18 @@
 
 int main(void){
 
-    int n = 1;
+    int n = 4;
+    int u = 1;
+    int v = 4;
+    int w = 2;
+    int x = 3;
 
     Graph G = newGraph(n);
-    freeGraph(&G);
+    addEdge(G, u, v);
+    addEdge(G, u, w);
+    addEdge(G, u, x);
+    printGraph(stdout, G);
+    // freeGraph(&G);
 
 
     // printf("All List tests passed.\n");
