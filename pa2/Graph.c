@@ -203,23 +203,37 @@ void addEdge(Graph G, int u, int v) {
     }
     // assign alias for u adj list
     List u_adj = G->v_neighbors[u];
-    List v_adj = G->v_neighbors[v];
-    if(position(u_adj) == -1 || position(v_adj) == -1) { // if list is empty, insert the neighbor
+    if(position(u_adj) == -1) { // if list is empty, insert the neighbor
+        printf("Append u!\n");
         append(u_adj, v);  
-        append(v_adj, u);    
-        moveFront(u_adj); // place cursor at front for subsequent insertions
-        moveFront(v_adj); // place cursor at front for subsequent insertions
+        moveFront(u_adj);
     }
     else{
-        for(int i = 1; i < G->order; i++) {
+        moveFront(u_adj);
+        while(position(u_adj) >= 0) {
             if(v < get(u_adj)) {
                 insertBefore(u_adj, v);
+                printf("Insert u!\n");
                 break;
             }
             else{
                 moveNext(u_adj);
             }
+        }
+    }
+    // assign alias for v adj list
+    List v_adj = G->v_neighbors[v];
+    printf("Position before v branch: %d\n", position(v_adj));
+    if(position(v_adj) == -1) { // if list is empty, insert the neighbor
+        printf("Append v!\n");
+        append(v_adj, u);  
+        moveFront(v_adj);
+    }
+    else{
+        moveFront(v_adj);
+        while(position(v_adj) >= 0) {
             if(u < get(v_adj)) {
+                printf("Insert v!\n");
                 insertBefore(v_adj, u);
                 break;
             }
@@ -228,17 +242,10 @@ void addEdge(Graph G, int u, int v) {
             }
         }
     }
+    printf("Position after v branch: %d\n", position(v_adj));
 
     // update edge count
     G->u_edge++;
-
-
-    /*int u_adj = front(G->v_neighbors[u]);
-    printf("Vertex is %d\n", u_adj);
-
-    int v_adj = front(G->v_neighbors[v]);
-    printf("Vertex is %d\n", v_adj); */
-
 }   
 
 // addArc()
@@ -259,7 +266,7 @@ void printGraph(FILE* out, Graph G) {
         exit(EXIT_FAILURE);
     }
 
-    for(int i = 1; i < G->order; i++) {
+    for(int i = 1; i < (G->order + 1); i++) {
         printf("%d: ", i);
         printList(stdout, G->v_neighbors[i]);
     } 

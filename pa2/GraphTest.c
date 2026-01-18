@@ -25,6 +25,9 @@ int main(void){
     addEdge(G, u, v);
     addEdge(G, u, w);
     addEdge(G, u, x);
+    addEdge(G, v, w);
+    addEdge(G, v, x);
+    addEdge(G, w, x);
     printGraph(stdout, G);
     // freeGraph(&G);
 
