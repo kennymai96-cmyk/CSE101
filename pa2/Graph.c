@@ -298,8 +298,27 @@ void BFS(Graph G, int s){
     G->v_dist[s]      = 0;
     // create gray FIFO queue
     List FIFO = newList();
-    // 
-    
+    // add source as oldest gray vertex
+    append(FIFO, s);
+    // explore while FIFO queue has gray vertices
+    while(length(FIFO) > 0) {
+        int x = front(FIFO); // assign vertex for exploration
+        deleteFront(FIFO); // remove from gray vertices list
+
+        List adj = G->neighbors[x]; // create adjacency list for current vertex
+        // iterate thru the adjacency list of current vertex until position invalid
+        for(moveFront(adj); position(FIFO) >= 0; moveNext(adj)) {
+            int y = get(adj); // grab current neighbor
+            if(G->v_color[y] == WHITE) { // check if undiscovered
+                G->v_color[y] = GRAY; // set current vertex as discovered
+                G->v_dist[y] = G->v_dist[x] + 1; // include x in y's path
+                append(FIFO, y); // set y as next vertex to explore
+            }
+        }
+        G->v_color[x] = BLACK; // set current vertex as discovered
+    }
+    // free FIFO queue list
+    freeList(&FIFO);
 }
 
 // other functions ------------------------------------------------------------
