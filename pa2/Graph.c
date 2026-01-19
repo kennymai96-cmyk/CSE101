@@ -98,7 +98,7 @@ int getNumArcs(Graph G) {
         exit(EXIT_FAILURE);
     }
 
-    return G->u_edge;
+    return G->d_edge;
 }
 
 // getSource()
