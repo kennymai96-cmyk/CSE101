@@ -68,7 +68,8 @@ void freeGraph(Graph* pG) {
 // getOrder()
 // Returns the number of vertices in G.
 int getOrder(Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -79,7 +80,8 @@ int getOrder(Graph G) {
 // getNumEdges()
 // Returns the number of edges in G.
 int getNumEdges(Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -90,7 +92,8 @@ int getNumEdges(Graph G) {
 // getNumArcs()
 // Returns the number of Arcs in G.
 int getNumArcs(Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) {
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -102,7 +105,8 @@ int getNumArcs(Graph G) {
 // Returns the source vertex in the most recent call to BFS(), or NIL if
 // BFS() has not yet been called.
 int getSource(Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -120,8 +124,14 @@ int getSource(Graph G) {
 // or returns NIL if BFS() has not yet been called.
 // Pre: 1 <= u <= getOrder(G)
 int getParent(Graph G, int u) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
         exit(EXIT_FAILURE);
     }
     // if BFS called, return source 
@@ -139,8 +149,14 @@ int getParent(Graph G, int u) {
 // otherwise returns INF.
 // Pre: 1 <= u <= getOrder(G)
 int getDist(Graph G, int u) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
         exit(EXIT_FAILURE);
     }
     // if BFS called, return source 
@@ -157,19 +173,29 @@ int getDist(Graph G, int u) {
 // source-u path to List L. Otherwise, appends NIL to L.
 // Pre: 1 <= u <= getOrder(G), getSource(G) != NIL
 void getPath(List L, Graph G, int u) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
-
-
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
+        exit(EXIT_FAILURE);
+    }
+    if(G->v_dist[u] != INF) {
+        List adj 
+        for()
+            append(L, );
+    }
 }
 
 // manipulation procedures ----------------------------------------------------
 // makeNull()
 // Resets G to its initial state.
 void makeNull(Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check for valid vertex
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -192,7 +218,8 @@ void makeNull(Graph G) {
 // Creates an undirected edge joining vertex u to vertex v.
 // Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
 void addEdge(Graph G, int u, int v) {
-    if(G == NULL) { // check that Graph exists
+    // check for valid vertex
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -237,7 +264,6 @@ void addEdge(Graph G, int u, int v) {
             }
         }
     }
-
     // update edge count
     G->u_edge++;
 }   
@@ -246,7 +272,8 @@ void addEdge(Graph G, int u, int v) {
 // Creates a directed edge joining vertex u to vertex v.
 // Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
 void addArc(Graph G, int u, int v) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -273,8 +300,6 @@ void addArc(Graph G, int u, int v) {
             }
         }
     }
-
-
     // update edge count
     G->d_edge++;
 }
@@ -282,7 +307,8 @@ void addArc(Graph G, int u, int v) {
 // BFS()
 // Runs the Breadth First Search algorithm on G with source vertex s.
 void BFS(Graph G, int s){
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
@@ -305,14 +331,18 @@ void BFS(Graph G, int s){
         int x = front(FIFO); // assign vertex for exploration
         deleteFront(FIFO); // remove from gray vertices list
 
-        List adj = G->neighbors[x]; // create adjacency list for current vertex
+        List adj = G->v_neighbors[x]; // create adjacency list for current vertex
         // iterate thru the adjacency list of current vertex until position invalid
-        for(moveFront(adj); position(FIFO) >= 0; moveNext(adj)) {
+        for(moveFront(adj); position(adj) >= 0; moveNext(adj)) {
             int y = get(adj); // grab current neighbor
             if(G->v_color[y] == WHITE) { // check if undiscovered
                 G->v_color[y] = GRAY; // set current vertex as discovered
                 G->v_dist[y] = G->v_dist[x] + 1; // include x in y's path
+                G->v_parent[y] = x; // set y's parent as x
                 append(FIFO, y); // set y as next vertex to explore
+                printf("Color is %d\n", G->v_color[y]);
+                printf("Dist is %d\n", G->v_dist[y]);
+                printf("Parent is %d\n", G->v_parent[y]);
             }
         }
         G->v_color[x] = BLACK; // set current vertex as discovered
@@ -326,7 +356,8 @@ void BFS(Graph G, int s){
 // printGraph()
 // Prints the adjacency list representation of G to FILE* out.
 void printGraph(FILE* out, Graph G) {
-    if(G == NULL) { // check that Graph exists
+    // check that Graph exists
+    if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }

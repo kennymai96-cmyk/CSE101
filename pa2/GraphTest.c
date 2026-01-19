@@ -19,7 +19,7 @@ int main(void){
     int u = 1;
     int w = 2;
     int x = 3;
-    int v = 4;
+    //int v = 4;
 
     Graph G = newGraph(n);
 
@@ -34,9 +34,11 @@ int main(void){
     // freeGraph(&G);
 
     // add arc tests
-    addArc(G, u, v); // add v4 to v1
-    addArc(G, x, w); // add v2 to v3
+    addArc(G, u, w); 
+    BFS(G, u);
+    addArc(G, w, x); 
     printGraph(stdout, G);
+    BFS(G, u);
 
     // printf("All List tests passed.\n");
     return 0;
