@@ -184,9 +184,12 @@ void getPath(List L, Graph G, int u) {
         exit(EXIT_FAILURE);
     }
     if(G->v_dist[u] != INF) {
-        List adj 
-        for()
-            append(L, );
+        printf("In path!\n");
+        int x = u; 
+        while(x != NIL) {
+            prepend(L, x);
+            x = getParent(G, x);
+        }
     }
 }
 
@@ -319,6 +322,7 @@ void BFS(Graph G, int s){
         G->v_dist[i]      = INF;
     }
     // init source as discovered
+    G->v_source = s;
     G->v_color[s]     = GRAY;
     G->v_parent[s]    = NIL;
     G->v_dist[s]      = 0;
@@ -340,9 +344,6 @@ void BFS(Graph G, int s){
                 G->v_dist[y] = G->v_dist[x] + 1; // include x in y's path
                 G->v_parent[y] = x; // set y's parent as x
                 append(FIFO, y); // set y as next vertex to explore
-                printf("Color is %d\n", G->v_color[y]);
-                printf("Dist is %d\n", G->v_dist[y]);
-                printf("Parent is %d\n", G->v_parent[y]);
             }
         }
         G->v_color[x] = BLACK; // set current vertex as discovered

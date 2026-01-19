@@ -39,6 +39,9 @@ int main(void){
     addArc(G, w, x); 
     printGraph(stdout, G);
     BFS(G, u);
+    List L = newList();
+    getPath(L, G, w);
+    printList(stdout, L);
 
     // printf("All List tests passed.\n");
     return 0;
