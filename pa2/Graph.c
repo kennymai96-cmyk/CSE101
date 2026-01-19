@@ -59,8 +59,21 @@ Graph newGraph(int n) {
 // freeGraph()
 // Frees all dynamic memory associated with Graph *pG and sets *pG to NULL.
 void freeGraph(Graph* pG) {
-    free(*pG);
-    *pG = NULL;
+    if (pG != NULL && *pG != NULL) {
+        Graph G = *pG;
+        // iterate thru adj lists and free memory
+        for (int i = 1; i <= G->order; i++) {
+            freeList(&G->v_neighbors[i]);
+        }
+        // free vertex info memory
+        free(G->v_neighbors);
+        free(G->v_color);
+        free(G->v_parent);
+        free(G->v_dist);
+        // free GraphObj memory
+        free(G);
+        *pG = NULL;
+    }
 }
 
 // access functions -----------------------------------------------------------
@@ -131,17 +144,16 @@ int getParent(Graph G, int u) {
     }
     // check for valid vertex
     if (u < 1 || u > getOrder(G)) { 
-        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
+        fprintf(stderr, "Invalid vertex!\n");
         exit(EXIT_FAILURE);
     }
     // if BFS called, return source 
-    if(G->v_source != NIL) { 
-        return G->v_parent[u];
+    if(getSource(G) == NIL) { 
+        return NIL;
     }
      else {
-        return NIL;
-    } 
-    
+        return G->v_parent[u];
+    }   
 }
 
 // getDist()
@@ -156,7 +168,7 @@ int getDist(Graph G, int u) {
     }
     // check for valid vertex
     if (u < 1 || u > getOrder(G)) { 
-        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
+        fprintf(stderr, "Invalid vertex!\n");
         exit(EXIT_FAILURE);
     }
     // if BFS called, return source 
@@ -178,19 +190,29 @@ void getPath(List L, Graph G, int u) {
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
-    // check for valid vertex
-    if (u < 1 || u > getOrder(G)) { 
-        fprintf(stderr, "Graph Error: calling getPath() with invalid vertex\n");
+    // check that L exists
+    if(L == NULL) { 
+        fprintf(stderr, "NULL List!\n");
         exit(EXIT_FAILURE);
     }
-    if(G->v_dist[u] != INF) {
-        printf("In path!\n");
-        int x = u; 
-        while(x != NIL) {
-            prepend(L, x);
-            x = getParent(G, x);
-        }
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Invalid vertex!\n");
+        exit(EXIT_FAILURE);
     }
+    // check if u is unreachable from source
+    if(G->v_dist[u] == INF) {
+        append(L, NIL);
+        return;
+    }
+    // check if u is source
+    if(u == G->v_source) {
+        append(L, u);
+        return;
+    }
+    // recursion to find shortest path
+    getPath(L, G, G->v_parent[u]);
+    append(L, u);
 }
 
 // manipulation procedures ----------------------------------------------------
@@ -202,7 +224,7 @@ void makeNull(Graph G) {
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
-    // init all ints
+    // init all vertex info
     G->u_edge = 0;
     G->d_edge = 0; 
     G->v_source = NIL; 
@@ -210,10 +232,10 @@ void makeNull(Graph G) {
     assert(G->v_color && G->v_parent && G->v_dist && G->v_neighbors);
     // init each element of arrays
     for (int i = 1; i <= G->order; i++) {
+        clear(G->v_neighbors[i]);
         G->v_color[i]     = WHITE;
         G->v_parent[i]    = NIL;
         G->v_dist[i]      = INF;
-        G->v_neighbors[i] = newList();
     }
 }
 
@@ -233,7 +255,8 @@ void addEdge(Graph G, int u, int v) {
     }
     // assign alias for u adj list
     List u_adj = G->v_neighbors[u];
-    if(position(u_adj) == -1) { // if list is empty, insert the neighbor
+    // if list is empty, insert the neighbor
+    if(position(u_adj) == -1) { 
         append(u_adj, v);  
         moveFront(u_adj);
     }
@@ -251,7 +274,8 @@ void addEdge(Graph G, int u, int v) {
     }
     // assign alias for v adj list
     List v_adj = G->v_neighbors[v];
-    if(position(v_adj) == -1) { // if list is empty, insert the neighbor
+    // if list is empty, insert the neighbor
+    if(position(v_adj) == -1) { 
         append(v_adj, u);  
         moveFront(v_adj);
     }
@@ -315,6 +339,10 @@ void BFS(Graph G, int s){
         fprintf(stderr, "NULL Graph!\n");
         exit(EXIT_FAILURE);
     }
+    if (s < 1 || s > G->order) {
+        fprintf(stderr, "Invalid vertex!\n");
+        exit(EXIT_FAILURE);
+    }
     // init all vertices in Graph as undiscovered
     for (int i = 1; i <= G->order; i++) {
         G->v_color[i]     = WHITE;
@@ -346,7 +374,7 @@ void BFS(Graph G, int s){
                 append(FIFO, y); // set y as next vertex to explore
             }
         }
-        G->v_color[x] = BLACK; // set current vertex as discovered
+        G->v_color[x] = BLACK; // set current vertex as finished
     }
     // free FIFO queue list
     freeList(&FIFO);
