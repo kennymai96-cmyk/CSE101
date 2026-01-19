@@ -17,20 +17,26 @@ int main(void){
 
     int n = 4;
     int u = 1;
-    int v = 4;
     int w = 2;
     int x = 3;
+    int v = 4;
 
     Graph G = newGraph(n);
-    addEdge(G, u, v);
+
+    // add edge tests
+    /*addEdge(G, u, v);
     addEdge(G, u, w);
     addEdge(G, u, x);
     addEdge(G, v, w);
     addEdge(G, v, x);
     addEdge(G, w, x);
-    printGraph(stdout, G);
+    printGraph(stdout, G);*/
     // freeGraph(&G);
 
+    // add arc tests
+    addArc(G, u, v); // add v4 to v1
+    addArc(G, x, w); // add v2 to v3
+    printGraph(stdout, G);
 
     // printf("All List tests passed.\n");
     return 0;
