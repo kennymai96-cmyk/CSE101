@@ -100,6 +100,43 @@ void addEdge(Graph G, int u, int v) {
     G->u_edge++;
 }   
 
+
+// addArc()
+// Creates a directed edge joining vertex u to vertex v.
+// Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
+void addArc(Graph G, int u, int v) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertices
+    if (!(1 <= u && u <= getOrder(G) && 1 <= v && v <= getOrder(G))) {
+        fprintf(stderr, "Invalid vertices!\n");
+        exit(EXIT_FAILURE);
+    }
+    // assign alias for u adj list
+    List u_adj = G->v_neighbors[u];
+    if(position(u_adj) == -1) { // if list is empty, insert the neighbor
+        append(u_adj, v);  
+        moveFront(u_adj);
+    }
+    else{
+        moveFront(u_adj);
+        while(position(u_adj) >= 0) {
+            if(v < get(u_adj)) {
+                insertBefore(u_adj, v);
+                break;
+            }
+            else{
+                moveNext(u_adj);
+            }
+        }
+    }
+    // update edge count
+    G->d_edge++;
+}
+
     // printf("All List tests passed.\n");
     return 0;
 }

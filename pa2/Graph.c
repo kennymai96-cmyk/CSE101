@@ -242,6 +242,9 @@ void makeNull(Graph G) {
 // addEdge()
 // Creates an undirected edge joining vertex u to vertex v.
 // Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
+// addEdge()
+// Creates an undirected edge joining vertex u to vertex v.
+// Pre: 1 <= u <= getOrder(G), 1 <= v <= getOrder(G)
 void addEdge(Graph G, int u, int v) {
     // check for valid vertex
     if(G == NULL) { 
@@ -256,44 +259,49 @@ void addEdge(Graph G, int u, int v) {
     // assign alias for u adj list
     List u_adj = G->v_neighbors[u];
     // if list is empty, insert the neighbor
-    if(position(u_adj) == -1) { 
-        append(u_adj, v);  
-        moveFront(u_adj);
+    if(length(u_adj) == 0) {
+        append(u_adj, v);
     }
-    else{
+    else {
         moveFront(u_adj);
         while(position(u_adj) >= 0) {
+            // insert before first larger element
             if(v < get(u_adj)) {
                 insertBefore(u_adj, v);
                 break;
             }
-            else{
-                moveNext(u_adj);
-            }
+            moveNext(u_adj);
+        }
+        // v is larger than all existing neighbors
+        if(position(u_adj) == -1) {
+            append(u_adj, v);
         }
     }
     // assign alias for v adj list
     List v_adj = G->v_neighbors[v];
     // if list is empty, insert the neighbor
-    if(position(v_adj) == -1) { 
-        append(v_adj, u);  
-        moveFront(v_adj);
+    if(length(v_adj) == 0) {
+        append(v_adj, u);
     }
-    else{
+    else {
         moveFront(v_adj);
         while(position(v_adj) >= 0) {
+            // insert before first larger element
             if(u < get(v_adj)) {
                 insertBefore(v_adj, u);
                 break;
             }
-            else{
-                moveNext(v_adj);
-            }
+            moveNext(v_adj);
+        }
+        // u is larger than all existing neighbors
+        if(position(v_adj) == -1) {
+            append(v_adj, u);
         }
     }
     // update edge count
     G->u_edge++;
-}   
+}
+ 
 
 // addArc()
 // Creates a directed edge joining vertex u to vertex v.
@@ -311,21 +319,27 @@ void addArc(Graph G, int u, int v) {
     }
     // assign alias for u adj list
     List u_adj = G->v_neighbors[u];
-    if(position(u_adj) == -1) { // if list is empty, insert the neighbor
+    // if list is empty, insert the neighbor
+    if(length(u_adj) == 0) { 
         append(u_adj, v);  
-        moveFront(u_adj);
     }
     else{
+        // go to front of adj list
         moveFront(u_adj);
+        // iterate while cursor is valid
         while(position(u_adj) >= 0) {
             if(v < get(u_adj)) {
                 insertBefore(u_adj, v);
-                break;
+                // update edge count
+                G->d_edge++;
+                return;
             }
             else{
                 moveNext(u_adj);
             }
         }
+        // if v is larger that all neighbors
+        append(u_adj, v);
     }
     // update edge count
     G->d_edge++;
