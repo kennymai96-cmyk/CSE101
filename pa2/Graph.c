@@ -406,7 +406,8 @@ void printGraph(FILE* out, Graph G) {
     }
 
     for(int i = 1; i < (G->order + 1); i++) {
-        printf("%d: ", i);
-        printList(stdout, G->v_neighbors[i]);
+        fprintf(out, "%d: ", i);
+        printList(out, G->v_neighbors[i]);
+        fprintf(out, "\n");
     } 
 }
