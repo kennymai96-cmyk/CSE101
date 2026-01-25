@@ -531,8 +531,52 @@ void printGraph(FILE* out, Graph G) {
 
 // copyGraph()
 // Returns a copy of G.
-Graph copyGraph(Graph G);
+Graph copyGraph(Graph G) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // make a copy graph with the same # of vertices
+    Graph C = newGraph(G->order); 
+    // iterate thru the adjacency list of og graph, and copy into copy graph
+    for(int i = 1; i <= G->order; i++) {
+        List G_adj = G->v_neighbors[i];
+        List C_adj = C->v_neighbors[i];
+
+        for(moveFront(G_adj); position(G_adj) >= 0; moveNext(G_adj)) {
+            append(C_adj, get(G_adj)); 
+        }
+    }
+    // copy edge counts
+    C->u_edge = G->u_edge;
+    C->d_edge = G->d_edge;
+
+    return C;
+}
 
 // transpose()
 // Returns the transpose of Graph G.
-Graph transpose(Graph G);
+Graph transpose(Graph G) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // make a transpose graph with the same # of vertices
+    Graph T = newGraph(G->order); 
+    // iterate thru the adjacency list of og graph and copy into temp list
+    for(int i = 1; i <= G->order; i++) {
+        List G_adj = G->v_neighbors[i];
+        // iterate thru temp list and assign the neighbor vertex with the vertex we started from
+        for(moveFront(G_adj); position(G_adj) >= 0; moveNext(G_adj)) {
+            int v = get(G_adj); 
+            append(T->v_neighbors[v], i); 
+        }
+    }
+    // copy edge counts
+    T->u_edge = G->u_edge;
+    T->d_edge = G->d_edge;
+
+    return T;
+}
