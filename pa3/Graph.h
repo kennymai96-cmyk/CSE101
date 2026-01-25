@@ -65,6 +65,15 @@ int getDist(Graph G, int u);
 // Pre: 1 <= u <= getOrder(G), getSource(G) != NIL
 void getPath(List L, Graph G, int u);
 
+// getDiscover()
+// Returns the discover time of u, or UNDEF if DFS() not yet called.
+// Pre: 1 <= u <= getOrder(G)
+int getDiscover(Graph G, int u);
+// getFinish()
+// Returns the finish time of u, or UNDEF if DFS() not yet called.
+// Pre: 1 <= u <= getOrder(G)
+int getFinish(Graph G, int u);
+
 // manipulation procedures ----------------------------------------------------
 // makeNull()
 // Resets G to its initial state.
@@ -83,6 +92,15 @@ void addArc(Graph G, int u, int v);
 // BFS()
 // Runs the Breadth First Search algorithm on G with source vertex s.
 void BFS(Graph G, int s);
+
+// DFS()
+// Runs the Depth First Search algorithm on G. Input List S contains the vertex
+// labels 1, .., n, where n=getOrder(G), and determines the order in which vertices
+// are processed in the main loop of DFS(). When complete, output List S contains
+// the same vertices sorted by decreasing finish times.
+// Pre: getOrder(G)==getLength(S)
+void DFS(Graph G, List S);
+
 // other functions ------------------------------------------------------------
 
 // printGraph()
