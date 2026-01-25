@@ -6,6 +6,7 @@
 // define ADT-specific literals
 #define INF -1 
 #define NIL 0 
+#define UNDEF -1
 #define WHITE 0
 #define GRAY  1
 #define BLACK 2

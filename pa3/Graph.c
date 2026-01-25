@@ -22,6 +22,8 @@ typedef struct GraphObj {
     int* v_color; // int array holding the color of each vertex
     int* v_parent; // int array holding the parents of each vertex
     int* v_dist; // int array holding the distance from most recent source to vertex
+    int* v_disc; // define int array holding discover times of each vertex
+    int* v_fin; // define int array holding finish times of each vertex
     List* v_neighbors; // list array holding neighbors at each vertex
 } GraphObj;
 
@@ -42,14 +44,18 @@ Graph newGraph(int n) {
     G->v_color = malloc((n + 1) * sizeof(int));
     G->v_parent = malloc((n + 1) * sizeof(int));
     G->v_dist = malloc((n + 1) * sizeof(int));
+    G->v_disc = malloc((n + 1) * sizeof(int));
+    G->v_fin = malloc((n + 1) * sizeof(int));
     G->v_neighbors = malloc((n + 1) * sizeof(List));
     // check for valid arrays
-    assert(G->v_color && G->v_parent && G->v_dist && G->v_neighbors);
+    assert(G->v_color && G->v_parent && G->v_dist && G->v_neighbors && G->v_disc && G->v_fin);
     // init each element of arrays(start at 1, 0 is NIL)
     for (int i = 1; i <= n; i++) {
         G->v_color[i]     = WHITE;
         G->v_parent[i]    = NIL;
         G->v_dist[i]      = INF;
+        G->v_disc[i] = UNDEF;
+        G->v_fin[i] = UNDEF;
         G->v_neighbors[i] = newList();
     }
     // return Graph with n vertices and no edges
@@ -70,6 +76,8 @@ void freeGraph(Graph* pG) {
         free(G->v_color);
         free(G->v_parent);
         free(G->v_dist);
+        free(G->v_disc);
+        free(G->v_fin);
         // free GraphObj memory
         free(G);
         *pG = NULL;
@@ -192,8 +200,7 @@ void getPath(List L, Graph G, int u) {
 }
 
 // getParent
-// Returns the parent of vertex u in the most recently constructed BFS tree
-// or returns NIL if BFS() has not yet been called.
+// Returns the parent of vertex u, or NIL if DFS() not yet called.
 // Pre: 1 <= u <= getOrder(G)
 int getParent(Graph G, int u) {
     // check that Graph exists
@@ -206,8 +213,8 @@ int getParent(Graph G, int u) {
         fprintf(stderr, "Invalid vertex!\n");
         exit(EXIT_FAILURE);
     }
-    // if BFS called, return source 
-    if(getSource(G) == NIL) { 
+    // if DFS called, return source 
+    if(G->v_disc[u] == UNDEF) { 
         return NIL;
     }
      else {
@@ -218,12 +225,38 @@ int getParent(Graph G, int u) {
 // getDiscover()
 // Returns the discover time of u, or UNDEF if DFS() not yet called.
 // Pre: 1 <= u <= getOrder(G)
-int getDiscover(Graph G, int u);
+int getDiscover(Graph G, int u) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Invalid vertex!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return G->v_disc[u];
+}
 
 // getFinish()
 // Returns the finish time of u, or UNDEF if DFS() not yet called.
 // Pre: 1 <= u <= getOrder(G)
-int getFinish(Graph G, int u);
+int getFinish(Graph G, int u) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid vertex
+    if (u < 1 || u > getOrder(G)) { 
+        fprintf(stderr, "Invalid vertex!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    return G->v_fin[u];
+}
 
 
 // manipulation procedures ----------------------------------------------------
@@ -247,6 +280,8 @@ void makeNull(Graph G) {
         G->v_color[i]     = WHITE;
         G->v_parent[i]    = NIL;
         G->v_dist[i]      = INF;
+        G->v_disc[i] = UNDEF;
+        G->v_fin[i] = UNDEF;
     }
 }
 
@@ -358,7 +393,7 @@ void addArc(Graph G, int u, int v) {
 
 // BFS()
 // Runs the Breadth First Search algorithm on G with source vertex s.
-void BFS(Graph G, int s){
+void BFS(Graph G, int s) {
     // check that Graph exists
     if(G == NULL) { 
         fprintf(stderr, "NULL Graph!\n");
@@ -405,6 +440,77 @@ void BFS(Graph G, int s){
     freeList(&FIFO);
 }
 
+// Private helper function for DFS
+// mark discover time
+// recurse on neighbors
+// mark finish time
+static int Visit(Graph G, int u, List S, int time) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+
+    time++; // increment time by 1 to mark entry into visit
+    G->v_disc[u] = time; // save discovery time
+    G->v_color[u] = GRAY; // set current vertex as discovered
+
+    List u_adj = G->v_neighbors[u]; // create adj list for vertex u
+    // iterate thru u's adjacency list 
+    for(moveFront(u_adj); position(u_adj) >= 0; moveNext(u_adj)) {
+        int v = get(u_adj); // grab current neighbor from u's adjacency list
+        if(G->v_color[v] == WHITE) { // if undiscovered, connect to u and add to existing time
+            G->v_parent[v] = u; 
+            time = Visit(G, v, S, time); 
+        }
+    }
+
+    G->v_color[u] = BLACK; // set current vertex as finished
+    time++; // increment time by 1 to mark exploration complete
+    G->v_fin[u] = time; // save finish time
+    prepend(S, u); // place vertex into List S in reverse finish time order
+
+    return time;
+}
+
+// DFS()
+// Runs the Depth First Search algorithm on G. Input List S contains the vertex
+// labels 1, .., n, where n=getOrder(G), and determines the order in which vertices
+// are processed in the main loop of DFS(). When complete, output List S contains
+// the same vertices sorted by decreasing finish times.
+// Pre: getOrder(G)==getLength(S)
+void DFS(Graph G, List S) {
+    // check that Graph exists
+    if(G == NULL) { 
+        fprintf(stderr, "NULL Graph!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check if vertex list equals order of Graph
+    if (length(S) != getOrder(G)) {
+        fprintf(stderr, "Invalid vertex list!\n");
+        exit(EXIT_FAILURE);
+    }
+    // init all vertices in Graph as undiscovered 
+    for(int i = 1; i <= G->order; i++) {
+        G->v_color[i]     = WHITE;
+        G->v_parent[i]    = NIL;
+    } 
+
+    int time = 0; // define int holding time
+
+    List C = copyList(S); // copy list holding og order of vertices
+    clear(S); // clear S for later insertion of reverse order finish times
+    // iterate thru List S and catalog discovery/finish times
+    for(moveFront(C); position(C) >= 0; moveNext(C)) {
+        int u = get(C); // grab vertex to explore
+        if(G->v_color[u] == WHITE) { // if undiscovered, begin exploring and recording time
+            time = Visit(G, u, S, time); 
+        }
+    }
+
+    freeList(&C); // free the copy List
+}
+
 // other functions ------------------------------------------------------------
 
 // printGraph()
@@ -422,3 +528,11 @@ void printGraph(FILE* out, Graph G) {
         fprintf(out, "\n");
     } 
 }
+
+// copyGraph()
+// Returns a copy of G.
+Graph copyGraph(Graph G);
+
+// transpose()
+// Returns the transpose of Graph G.
+Graph transpose(Graph G);
