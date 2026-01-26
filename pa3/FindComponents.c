@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     }
     Graph T = transpose(G); // create transpose of G
     DFS(G, S); // run DFS on G
-    DFS(T, S); // run DFS on T
+    DFS(T, S); // run DFS on T with vertices ordered by decreasing finish time
 
     fprintf(out, "Adjacency list representation of G:\n");
     printGraph(out, G);
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     
     List M = newList();
     int c_num = 0;
-    // iterate backwards thru S in order of decreasing finish time
+    // iterate backwards thru S in order of increasing finish time
     // check which vertices are roots, if not append to list and continue, navigates the SCC 
     for(moveBack(S); position(S) >= 0; movePrev(S)) {
         int u = get(S);
