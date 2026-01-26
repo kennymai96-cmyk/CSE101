@@ -103,6 +103,14 @@ void DFS(Graph G, List S);
 
 // other functions ------------------------------------------------------------
 
+// copyGraph()
+// Returns a copy of G.
+
+Graph copyGraph(Graph G);
+// transpose()
+// Returns the transpose of Graph G.
+Graph transpose(Graph G);
+
 // printGraph()
 // Prints the adjacency list representation of G to FILE* out.
 void printGraph(FILE* out, Graph G);

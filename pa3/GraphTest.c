@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // Kenny Mai
 // kemai
-// 2026 Winter CSE101 PA2
+// 2026 Winter CSE101 PA3
 // GraphTest.c
 // Unit Tests for Graph ADT
 //-----------------------------------------------------------------------------
@@ -37,11 +37,14 @@ int main(void){
     addArc(G, u, w); 
     addArc(G, w, x); 
     addArc(G, x, v); 
-    printGraph(stdout, G);
-    BFS(G, u);
-    //List L = newList();
+    ///printGraph(stdout, G);
+    List S = newList();
     //getPath(L, G, w);
+
     //printList(stdout, L);
+
+    DFS(G, S);
+
 
     // printf("All List tests passed.\n");
     return 0;
