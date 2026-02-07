@@ -3,7 +3,7 @@
 // kemai
 // 2026 Winter CSE101 PA4
 // Matrix.c
-// Implementation file for Matrix ADT
+// ImpMementation file for Matrix ADT
 //-----------------------------------------------------------------------------
 
 #include <stdio.h> // required libraries
@@ -49,8 +49,12 @@ static Entry newEntry(int col, double val){
 // newMatrix()
 // Returns a reference to a new n by n Matrix in the zero state.
 Matrix newMatrix(int n){
-
-    Matrix M = malloc(sizeof(MatrixObj));
+    // check for min matrix size
+    if(n < 1){
+        fprintf(stderr, "Matrix too tiny!");
+        exit(EXIT_FAILURE);
+    }
+    Matrix M = malloc(sizeof(MatrixObj));    
     // check for valid matrix
     if(M == NULL){
         fprintf(stderr, "NULL Entry!\n");
@@ -58,10 +62,18 @@ Matrix newMatrix(int n){
     }
     // load matrix values
     M->n = n;
-    // zero init matrix entries
     M->nzn = 0;
-    for(int i = 0; i <= dimension(M); i++){
-        M->rows[i] = 0;
+    // allocate memory & zero-init matrix rows
+    M->rows = calloc(n + 1, sizeof(List));
+    // check for valid row allocation, and pMug memory leak if not
+    if(M->rows == NULL){
+        free(M);
+        fprintf(stderr, "NULL Entry!\n");
+        exit(EXIT_FAILURE);
+    }
+    // create new list for each row of matrix
+    for(int i = 1; i <= n; i++){
+        M->rows[i] = newList();
     }
     // return new matrix
     return M;
@@ -69,23 +81,87 @@ Matrix newMatrix(int n){
 
 // freeMatrix()
 // Frees all heap memory associated with *pM, sets *pM to NULL.
-void freeMatrix(Matrix* pM);
+void freeMatrix(Matrix* pM){
+    // check for valid matrix pointer
+    if(pM == NULL || *pM == NULL) return;
+    // assign new matrix pointer to input
+    Matrix M = * pM;
+    // walk matrix and free memory
+    for(int i = 1; i <= M->n; i++){
+        // assign current matrix entry
+        List E_curr = M->rows[i];
+        // walk thru current matrix row and free entries
+        for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+            // assign entry pointer with an entry type cast
+            Entry E = (Entry)get(E_curr);
+            // free the entry pointer
+            free(E);
+        }
+        // free current matrix entry
+        clear(E_curr);
+        // free current entry obj
+        freeList(&(M->rows[i]));
+    }
+    // free matrix memory 
+    free(M->rows);
+    free(M);
+    // free matrix pointer
+    *pM = NULL;
+}
 
 // Access functions -----------------------------------------------------------
 
 // dimension()
 // Returns the number of rows and columns of square Matrix M.
-int dimension(Matrix M);
+int dimension(Matrix M){
+    // check for valid matrix
+    if(M == NULL){
+        fprintf(stderr, "NULL Entry!\n");
+        exit(EXIT_FAILURE);
+    }
+    // return matrix dimension
+    return M->n;
+}
 // numNonZero()
 // Returns the number of non-zero elements in M.
-int numNonZero(Matrix M);
+int numNonZero(Matrix M){
+    // check for valid matrix
+    if(M == NULL){
+        fprintf(stderr, "NULL Entry!\n");
+        exit(EXIT_FAILURE);
+    }
+    // return non-zero entries of matrix
+    return M->nzn;
+}
+
 // equals()
 // Returns true if matrices A and B are equal, false otherwise.
 bool equals(Matrix A, Matrix B);
+
 // Manipulation procedures ----------------------------------------------------
+
 // makeZero()
 // Resets M to the zero Matrix.
-void makeZero(Matrix M);
+void makeZero(Matrix M){
+    // check for valid matrix
+    if(M == NULL){
+        fprintf(stderr, "NULL Entry!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for min matrix size
+    if(M->n < 1){
+        fprintf(stderr, "Matrix too tiny!");
+        exit(EXIT_FAILURE);
+    }
+    // reset matrix values
+    M->n = 0;
+    M->nzn = 0;
+    // reset matrix rows
+    for(int i = 1; i <= M->n; i++){
+        M->rows[i] = newList();
+    }
+}
+
 // changeEntry()
 // Changes the ith row, jth column of M to be the value x.
 // Pre: 1<=i<=dimension(M), 1<=j<=dimension(M)
