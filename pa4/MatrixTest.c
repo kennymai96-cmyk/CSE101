@@ -14,6 +14,13 @@
 #include "List.h"
 
 int main(void){
+    // make new matrix
+    Matrix M = newMatrix(1);
+    // add entry
+    changeEntry(M, 1, 1, 5.0);
+    printMatrix(stdout, M);
+    // free matrix
+    freeMatrix(&M);
 
     return 0;
 }

@@ -92,16 +92,16 @@ void freeMatrix(Matrix* pM){
     // walk matrix and free memory
     for(int i = 1; i <= M->n; i++){
         // assign current matrix entry
-        List E_curr = M->rows[i];
+        List row = M->rows[i];
         // walk thru current matrix row and free entries
-        for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+        for(moveFront(row); position(row) >= 0; moveNext(row)){
             // assign entry pointer with an entry type cast
-            Entry E = (Entry)get(E_curr);
+            Entry E = (Entry)get(row);
             // free the entry pointer
             free(E);
         }
         // free current matrix entry
-        clear(E_curr);
+        clear(row);
         // free current entry obj
         freeList(&(M->rows[i]));
     }
@@ -162,16 +162,16 @@ void makeZero(Matrix M){
     // reset matrix rows
     for(int i = 1; i <= M->n; i++){
         // assign current matrix entry
-        List E_curr = M->rows[i];
+        List row = M->rows[i];
         // walk thru current matrix row and free entries
-        for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+        for(moveFront(row); position(row) >= 0; moveNext(row)){
             // assign entry pointer with an entry type cast
-            Entry E = (Entry)get(E_curr);
+            Entry E = (Entry)get(row);
             // free the entry pointer
             free(E);
         }
         // free current matrix entry
-        clear(E_curr);
+        clear(row);
     }
 }
 
@@ -195,17 +195,17 @@ void changeEntry(Matrix M, int i, int j, double x){
         exit(EXIT_FAILURE);
     }
     // get entry in current row
-    List E_curr = M->rows[i];
+    List row = M->rows[i];
     // walk current row until column j encountered
-    for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+    for(moveFront(row); position(row) >= 0; moveNext(row)){
         // assign entry obj pointer
-        Entry E = (Entry)get(E_curr);
+        Entry E = (Entry)get(row);
         // check for correct column
         if(E->col == j){
             // if inserting 0, destroy entry and decrement non-zero entries
             if(x == 0.0){
                 free(E);
-                delete(E_curr);
+                delete(row);
                 M->nzn--;
             }
             // if inserting non-zero, update entry value(non-zero entries stay the same)
@@ -229,12 +229,12 @@ void changeEntry(Matrix M, int i, int j, double x){
     Entry E_new = newEntry(j, x);
     // if we are currently in a valid position in the row
     // insert the new entry before the current one which is greater than column j
-    if(position(E_curr) >= 0){
-        insertBefore(E_curr, E_new);
+    if(position(row) >= 0){
+        insertBefore(row, E_new);
     }
     // append new entry to back of list if cursor is undefined
     else{
-        append(E_curr, E_new);
+        append(row, E_new);
     }
     // increment non-zero entries
     M->nzn++;
@@ -263,11 +263,36 @@ Matrix diff(Matrix A, Matrix B);
 // Returns a reference to a new Matrix representing AB
 // pre: dimension(A)==dimension(B)
 Matrix product(Matrix A, Matrix B);
+
 // Other operations -----------------------------------------------------------
+
 // printMatrix()
 // Prints a string representation of Matrix M to filestream out. Zero rows are
 // not printed. Each non-zero row is represented as a line consisting of the
 // row number, followed by a colon, a space, then a space separated list of pairs
 // "(col, val)" giving the column numbers and non-zero values in that row. The
 // double val will be rounded to 1 decimal point.
-void printMatrix(FILE* out, Matrix M);
+void printMatrix(FILE* out, Matrix M) {
+    // check for valid matrix
+    if(M == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    // iterate thru matrix and print each entry in each row
+    for(int i = 1; i <= M->n; i++){
+        // assign current matrix entry
+        List row = M->rows[i]; 
+        // check for non-zero row
+        if(length(row) > 0){
+            // print row #
+            fprintf(stdout, "%d: ", i);
+            // iterate thru row and print col, val pair
+            for(moveFront(row); position(row) >= 0; moveNext(row)){
+                Entry E = (Entry)get(row);
+                fprintf(stdout, "(%d , %.1f) ", E->col, E->val);
+            }
+            // print newline
+            fprintf(stdout, "\n");
+        }
+    }
+}

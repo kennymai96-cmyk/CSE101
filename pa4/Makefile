@@ -3,78 +3,105 @@
 #
 #  make                      makes Sparse
 #  make MatrixClient         makes MatrixClient
+#  make MatrixTest           makes MatrixTest
 #  make clean                removes all binaries
 #  make checkMatrixClient    runs MatrixClient under valgrind
+#  make checkMatrixTest      runs MatrixTest under valgrind
 #  make checkSparse          runs Sparse under valgrind on in8
 #------------------------------------------------------------------------------
-
 
 MAIN           = Sparse
 MAINOBJ        = $(MAIN).o
 MAINSRC        = $(MAIN).c
+
 TEST           = MatrixClient
 TESTOBJ        = $(TEST).o
 TESTSRC        = $(TEST).c
+
+TEST2          = MatrixTest
+TEST2OBJ       = $(TEST2).o
+TEST2SRC       = $(TEST2).c
+
 ADT1           = Matrix
 ADT1OBJ        = $(ADT1).o
 ADT1SRC        = $(ADT1).c
 ADT1_H         = $(ADT1).h
+
 ADT2           = List
 ADT2OBJ        = $(ADT2).o
 ADT2SRC        = $(ADT2).c
 ADT2_H         = $(ADT2).h
+
 COMPILE        = gcc -std=c17 -Wall -c
 LINK           = gcc -std=c17 -Wall -o
 REMOVE         = rm -f
 MEMCHECK       = valgrind --leak-check=full
+
 INFILE         = in8
 OUTFILE        = myout8
 
+#------------------------------------------------------------------------------
+# Default target
+#------------------------------------------------------------------------------
+all: $(MAIN)
 
-$(MAIN) : $(MAINOBJ) $(ADT1OBJ) $(ADT2OBJ)
+#------------------------------------------------------------------------------
+# Build rules
+#------------------------------------------------------------------------------
+$(MAIN): $(MAINOBJ) $(ADT1OBJ) $(ADT2OBJ)
 	$(LINK) $(MAIN) $(MAINOBJ) $(ADT1OBJ) $(ADT2OBJ)
 
-$(MAINOBJ) : $(MAINSRC) $(ADT1_H)
+$(MAINOBJ): $(MAINSRC) $(ADT1_H)
 	$(COMPILE) $(MAINSRC)
 
-$(TEST) : $(TESTOBJ) $(ADT1OBJ) $(ADT2OBJ)
+$(TEST): $(TESTOBJ) $(ADT1OBJ) $(ADT2OBJ)
 	$(LINK) $(TEST) $(TESTOBJ) $(ADT1OBJ) $(ADT2OBJ)
 
-$(TESTOBJ) : $(TESTSRC) $(ADT1_H) 
+$(TESTOBJ): $(TESTSRC) $(ADT1_H)
 	$(COMPILE) $(TESTSRC)
 
-$(ADT1OBJ) : $(ADT1_H) $(ADT2_H) $(ADT1SRC)
+$(TEST2): $(TEST2OBJ) $(ADT1OBJ) $(ADT2OBJ)
+	$(LINK) $(TEST2) $(TEST2OBJ) $(ADT1OBJ) $(ADT2OBJ)
+
+$(TEST2OBJ): $(TEST2SRC) $(ADT1_H)
+	$(COMPILE) $(TEST2SRC)
+
+$(ADT1OBJ): $(ADT1SRC) $(ADT1_H) $(ADT2_H)
 	$(COMPILE) $(ADT1SRC)
 
-$(ADT2OBJ) : $(ADT2_H) $(ADT2SRC)
+$(ADT2OBJ): $(ADT2SRC) $(ADT2_H)
 	$(COMPILE) $(ADT2SRC)
 
-clean :
-	$(REMOVE) $(MAIN) $(MAINOBJ) $(TEST) $(TESTOBJ) $(ADT1OBJ) $(ADT2OBJ)
+#------------------------------------------------------------------------------
+# Cleanup
+#------------------------------------------------------------------------------
+clean:
+	$(REMOVE) $(MAIN) $(MAINOBJ) \
+	          $(TEST) $(TESTOBJ) \
+	          $(TEST2) $(TEST2OBJ) \
+	          $(ADT1OBJ) $(ADT2OBJ)
 
-check$(MAIN) : $(MAIN)
-	$(MEMCHECK) $(MAIN) $(INFILE) $(OUTFILE)
+#------------------------------------------------------------------------------
+# Valgrind checks
+#------------------------------------------------------------------------------
+check$(MAIN): $(MAIN)
+	$(MEMCHECK) ./$(MAIN) $(INFILE) $(OUTFILE)
 
-check$(TEST) : $(TEST)
-	$(MEMCHECK) $(TEST)
+check$(TEST): $(TEST)
+	$(MEMCHECK) ./$(TEST)
 
-# ------------------------------------------------------------------------------
-#  ADT-only build targets (no linking, just compile / syntax check)
-# ------------------------------------------------------------------------------
+check$(TEST2): $(TEST2)
+	$(MEMCHECK) ./$(TEST2)
 
-# Compile List.c -> List.o
+#------------------------------------------------------------------------------
+# ADT-only targets
+#------------------------------------------------------------------------------
 list: $(ADT2OBJ)
 
-# Compile Matrix.c -> Matrix.o
 matrix: $(ADT1OBJ)
 
-# Syntax-only checks (no .o output)
 checklist:
 	$(COMPILE) -fsyntax-only $(ADT2SRC)
 
 checkmatrix:
 	$(COMPILE) -fsyntax-only $(ADT1SRC)
-
-
-
-
