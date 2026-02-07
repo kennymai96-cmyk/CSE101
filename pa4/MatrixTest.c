@@ -15,12 +15,19 @@
 
 int main(void){
     // make new matrix
-    Matrix M = newMatrix(1);
+    Matrix M = newMatrix(2);
     // add entry
     changeEntry(M, 1, 1, 5.0);
+    changeEntry(M, 1, 2, 10.0);
+    changeEntry(M, 2, 2, 15.0);
+    changeEntry(M, 2, 1, 20.0);
     printMatrix(stdout, M);
+    // make new matrix
+    Matrix N = copy(M);
+    printMatrix(stdout, N);
     // free matrix
     freeMatrix(&M);
+    freeMatrix(&N);
 
     return 0;
 }
