@@ -13,6 +13,4 @@ Words.c - Top-level file for List ADT
 Makefile - Makefile for LIST ADT
 
 AI Chat Log URLS
-List.h - https://chatgpt.com/c/69605064-5854-8330-8261-c396c2d362c6
-List.c - https://chatgpt.com/c/69606f6a-4d34-832f-9d53-f3ce7906c644
-Words.c - https://chatgpt.com/c/69643aad-3a70-832e-9c9d-7c1281563bf3
+Matrix.c - https://chatgpt.com/c/69877ca2-7f50-8331-8893-2e23fc2722c1

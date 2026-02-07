@@ -57,7 +57,7 @@ Matrix newMatrix(int n){
     Matrix M = malloc(sizeof(MatrixObj));    
     // check for valid matrix
     if(M == NULL){
-        fprintf(stderr, "NULL Entry!\n");
+        fprintf(stderr, "NULL Matrix!\n");
         exit(EXIT_FAILURE);
     }
     // load matrix values
@@ -68,7 +68,7 @@ Matrix newMatrix(int n){
     // check for valid row allocation, and pMug memory leak if not
     if(M->rows == NULL){
         free(M);
-        fprintf(stderr, "NULL Entry!\n");
+        fprintf(stderr, "NULL Matrix!\n");
         exit(EXIT_FAILURE);
     }
     // create new list for each row of matrix
@@ -83,7 +83,10 @@ Matrix newMatrix(int n){
 // Frees all heap memory associated with *pM, sets *pM to NULL.
 void freeMatrix(Matrix* pM){
     // check for valid matrix pointer
-    if(pM == NULL || *pM == NULL) return;
+    if(pM == NULL || *pM == NULL){
+        fprintf(stderr, "NULL MAtrix pointer!\n");
+        exit(EXIT_FAILURE);
+    }
     // assign new matrix pointer to input
     Matrix M = * pM;
     // walk matrix and free memory
@@ -116,7 +119,7 @@ void freeMatrix(Matrix* pM){
 int dimension(Matrix M){
     // check for valid matrix
     if(M == NULL){
-        fprintf(stderr, "NULL Entry!\n");
+        fprintf(stderr, "NULL Matrix!\n");
         exit(EXIT_FAILURE);
     }
     // return matrix dimension
@@ -127,7 +130,7 @@ int dimension(Matrix M){
 int numNonZero(Matrix M){
     // check for valid matrix
     if(M == NULL){
-        fprintf(stderr, "NULL Entry!\n");
+        fprintf(stderr, "NULL Matrix!\n");
         exit(EXIT_FAILURE);
     }
     // return non-zero entries of matrix
@@ -142,10 +145,11 @@ bool equals(Matrix A, Matrix B);
 
 // makeZero()
 // Resets M to the zero Matrix.
+// same as freematrix() except keeps the matrix entry objs intact
 void makeZero(Matrix M){
     // check for valid matrix
     if(M == NULL){
-        fprintf(stderr, "NULL Entry!\n");
+        fprintf(stderr, "NULL Matrix!\n");
         exit(EXIT_FAILURE);
     }
     // check for min matrix size
@@ -154,18 +158,88 @@ void makeZero(Matrix M){
         exit(EXIT_FAILURE);
     }
     // reset matrix values
-    M->n = 0;
     M->nzn = 0;
     // reset matrix rows
     for(int i = 1; i <= M->n; i++){
-        M->rows[i] = newList();
+        // assign current matrix entry
+        List E_curr = M->rows[i];
+        // walk thru current matrix row and free entries
+        for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+            // assign entry pointer with an entry type cast
+            Entry E = (Entry)get(E_curr);
+            // free the entry pointer
+            free(E);
+        }
+        // free current matrix entry
+        clear(E_curr);
     }
 }
 
 // changeEntry()
 // Changes the ith row, jth column of M to be the value x.
 // Pre: 1<=i<=dimension(M), 1<=j<=dimension(M)
-void changeEntry(Matrix M, int i, int j, double x);
+void changeEntry(Matrix M, int i, int j, double x){
+    // check for valid matrix
+    if(M == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for valid row
+    if(i < 1 || i > dimension(M)){
+        fprintf(stderr, "Invalid row!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check  for valid column
+    if(j < 1 || j > dimension(M)){
+        fprintf(stderr, "Invalid column!\n");
+        exit(EXIT_FAILURE);
+    }
+    // get entry in current row
+    List E_curr = M->rows[i];
+    // walk current row until column j encountered
+    for(moveFront(E_curr); position(E_curr) >= 0; moveNext(E_curr)){
+        // assign entry obj pointer
+        Entry E = (Entry)get(E_curr);
+        // check for correct column
+        if(E->col == j){
+            // if inserting 0, destroy entry and decrement non-zero entries
+            if(x == 0.0){
+                free(E);
+                delete(E_curr);
+                M->nzn--;
+            }
+            // if inserting non-zero, update entry value(non-zero entries stay the same)
+            else{
+                E->val = x;
+            }
+            // exit once insertion complete
+            return;
+        }
+        // check if current column is beyond insertion point
+        // if so, exit row navigation and proceed to creation of new entry
+        if(E->col > j){
+            break;
+        }
+    }
+    // if inserting 0, but column j was not encountered, exit
+    if(x == 0.0){
+        return;
+    }
+    // if column j does not currently exist
+    Entry E_new = newEntry(j, x);
+    // if we are currently in a valid position in the row
+    // insert the new entry before the current one which is greater than column j
+    if(position(E_curr) >= 0){
+        insertBefore(E_curr, E_new);
+    }
+    // append new entry to back of list if cursor is undefined
+    else{
+        append(E_curr, E_new);
+    }
+    // increment non-zero entries
+    M->nzn++;
+}
+
 // Matrix Arithmetic operations -----------------------------------------------
 // copy()
 // Returns a reference to a new Matrix having the same entries as A.
