@@ -15,16 +15,18 @@
 
 int main(void){
     // make new matrix
-    Matrix M = newMatrix(2);
+    Matrix M = newMatrix(3);
     // add entry
-    changeEntry(M, 1, 1, 5.0);
-    changeEntry(M, 1, 2, 10.0);
-    changeEntry(M, 2, 2, 15.0);
-    changeEntry(M, 2, 1, 20.0);
+    changeEntry(M, 1, 2, 3.0);
+    changeEntry(M, 2, 1, 4.0);
+    changeEntry(M, 2, 3, 6.0);
     printMatrix(stdout, M);
+    printf("\n");
     // make new matrix
     Matrix N = copy(M);
-    printMatrix(stdout, N);
+    //printMatrix(stdout, N);
+    Matrix O = transpose(M);
+    printMatrix(stdout, O);
     // free matrix
     freeMatrix(&M);
     freeMatrix(&N);

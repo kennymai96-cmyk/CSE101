@@ -270,11 +270,50 @@ Matrix copy(Matrix A){
 // Returns a reference to a new Matrix representing the transpose
 // of A.
 Matrix transpose(Matrix A){
-    
+    // check for valid matrix
+    if(A == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    // make new matrix with same size as A
+    Matrix B = newMatrix(A->n);
+    // iterate thru A 
+    for(int i = 1; i <= A->n; i++){
+        // assign current matrix entry
+        List row_A = A->rows[i];
+        // iterate thru A
+        for(moveFront(row_A); position(row_A) >= 0; moveNext(row_A)){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            changeEntry(B, E_A->col, i, E_A->val);
+        }
+    }
+    return B;
 }
+
 // scalarMult()
 // Returns a reference to a new Matrix representing xA.
-Matrix scalarMult(double x, Matrix A);
+Matrix scalarMult(double x, Matrix A){
+    // check for valid matrix
+    if(A == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    // make new matrix with same size as A
+    Matrix B = newMatrix(A->n);
+    // iterate thru A 
+    for(int i = 1; i <= A->n; i++){
+        // assign current matrix entry
+        List row_A = A->rows[i];
+        // iterate thru A
+        for(moveFront(row_A); position(row_A) >= 0; moveNext(row_A)){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            changeEntry(B, i, E_A->col, E_A->val);
+        }
+    }
+    return B;
+}
 // sum()
 // Returns a reference to a new Matrix representing A+B.
 // pre: dimension(A)==dimension(B)
