@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     // define line size
     char line[256]; 
     // define matrix info vars
-    int n, a, b; 
+    int n, a, b, a_nzn, b_nzn; 
     // get first line of input file
     if(fgets(line, sizeof(line), in) == NULL){
         fprintf(stderr, "Incorrect header!");
@@ -41,6 +41,9 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
         fprintf(stderr, "Incorrect header format!");
         exit(EXIT_FAILURE);
     } 
+    // copy a & b nzn #
+    a_nzn = a;
+    b_nzn = b;
     // define matrices
     Matrix A = newMatrix(n);
     Matrix B = newMatrix(n);
@@ -54,8 +57,8 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
             // load entry into A
             changeEntry(A, row, col, val);
             // decrement a nzn #
-            a--;
-            if(a == 0){
+            a_nzn--;
+            if(a_nzn == 0){
                 break;
             }
         }
@@ -72,7 +75,7 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
                 // load entry into B
                 changeEntry(B, row, col, val);
              // decrement b nzn #
-                b--;
+                b_nzn--;
             }
             // proceed to rest of matrix B info
             break;
@@ -88,14 +91,21 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
             // load entry into matrix B
             changeEntry(B, row, col, val);
             // decrement b nzn #
-            b--;
-            if(b == 0){
+            b_nzn--;
+            if(b_nzn == 0){
                 break;
             }
         }
     }
     // print matrix A info
+    printf("A has %d non-zero entries:", a);
+    printf("\n");
     printMatrix(stdout, A);
+    printf("\n");
+    // print matrix B info
+    printf("B has %d non-zero entries:", b);
+    printf("\n");
+    printMatrix(stdout, B);
     // print to output file
     fprintf(out, "\n"); 
     // close the input/output file
