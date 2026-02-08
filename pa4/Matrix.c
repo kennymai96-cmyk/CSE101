@@ -309,23 +309,224 @@ Matrix scalarMult(double x, Matrix A){
         for(moveFront(row_A); position(row_A) >= 0; moveNext(row_A)){
             // assign entry pointer with an entry type cast
             Entry E_A = (Entry)get(row_A);
-            changeEntry(B, i, E_A->col, E_A->val);
+            changeEntry(B, i, E_A->col, (x * E_A->val));
         }
     }
+    // return new scalar mult matrix
     return B;
 }
 // sum()
 // Returns a reference to a new Matrix representing A+B.
 // pre: dimension(A)==dimension(B)
-Matrix sum(Matrix A, Matrix B);
+Matrix sum(Matrix A, Matrix B){
+    // check for valid matrix
+    if(A == NULL || B == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    if(dimension(A) != dimension(B)){
+        fprintf(stderr, "Matrices of different size!\n");
+        exit(EXIT_FAILURE);
+    }
+    // create new matrix 
+    Matrix C = newMatrix(dimension(A));
+    // iterate thru A & B and store sums in C
+    for(int i = 1; i <= dimension(A); i++){
+        List row_A = A->rows[i];
+        List row_B = B->rows[i];
+        // go to front of each matrix's row
+        moveFront(row_A);
+        moveFront(row_B);
+        // iterate thru each row while cursor is valid
+        while(position(row_A) >= 0 && position(row_B) >= 0){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            Entry E_B = (Entry)get(row_B);
+            // declare new sum value var
+            double x;
+            // check if both columns exist
+            if(E_A->col == E_B->col){
+                x = E_A->val + E_B->val;
+                if(x != 0){
+                    changeEntry(C, i, E_A->col, x);
+
+                }
+                // move to next entry
+                moveNext(row_A);
+                moveNext(row_B);
+
+            }
+            // check if matrix A has a column, but B does not
+            else if(E_A->col < E_B->col){
+                changeEntry(C, i, E_A->col, E_A->val);
+                // move to next entry
+                moveNext(row_A);
+            }
+            // check if matrix B has a column, but A does not
+            else if(E_B->col < E_A->col){
+                changeEntry(C, i, E_B->col, E_B->val);
+                // move to next entry
+                moveNext(row_B);
+            }
+        }
+        // copy remaining entries from A into C
+        while(position(row_A) >= 0){
+            Entry E_A = (Entry)get(row_A);
+            changeEntry(C, i, E_A->col, E_A->val);
+            moveNext(row_A);
+        }
+        // copy remaining entries from B into C
+        while(position(row_B) >= 0){
+            Entry E_B = (Entry)get(row_B);
+            changeEntry(C, i, E_B->col, E_B->val);
+            moveNext(row_B);
+        }
+    }
+    // return new summed matrix
+    return C;
+}
+
 // diff()
 // Returns a reference to a new Matrix representing A-B.
 // pre: dimension(A)==dimension(B)
-Matrix diff(Matrix A, Matrix B);
+Matrix diff(Matrix A, Matrix B){
+    // check for valid matrix
+    if(A == NULL || B == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    if(dimension(A) != dimension(B)){
+        fprintf(stderr, "Matrices of different size!\n");
+        exit(EXIT_FAILURE);
+    }
+    // create new matrix 
+    Matrix C = newMatrix(dimension(A));
+    // iterate thru A & B and store diffs in C
+    for(int i = 1; i <= dimension(A); i++){
+        List row_A = A->rows[i];
+        List row_B = B->rows[i];
+        // go to front of each matrix's row
+        moveFront(row_A);
+        moveFront(row_B);
+        // iterate thru each row while cursor is valid
+        while(position(row_A) >= 0 && position(row_B) >= 0){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            Entry E_B = (Entry)get(row_B);
+            // declare new sum value var
+            double x;
+            // check if both columns exist
+            if(E_A->col == E_B->col){
+                x = E_A->val - E_B->val;
+                if(x != 0){
+                    changeEntry(C, i, E_A->col, x);
+
+                }
+                // move to next entry
+                moveNext(row_A);
+                moveNext(row_B);
+
+            }
+            // check if matrix A has a column, but B does not
+            else if(E_A->col < E_B->col){
+                changeEntry(C, i, E_A->col, E_A->val);
+                // move to next entry
+                moveNext(row_A);
+            }
+            // check if matrix B has a column, but A does not
+            else if(E_B->col < E_A->col){
+                changeEntry(C, i, E_B->col, E_B->val);
+                // move to next entry
+                moveNext(row_B);
+            }
+        }
+        // copy remaining entries from A into C
+        while(position(row_A) >= 0){
+            Entry E_A = (Entry)get(row_A);
+            changeEntry(C, i, E_A->col, E_A->val);
+            moveNext(row_A);
+        }
+        // copy remaining entries from B into C
+        while(position(row_B) >= 0){
+            Entry E_B = (Entry)get(row_B);
+            changeEntry(C, i, E_B->col, E_B->val);
+            moveNext(row_B);
+        }
+    }
+    // return new summed matrix
+    return C;
+}
+
 // product()
 // Returns a reference to a new Matrix representing AB
 // pre: dimension(A)==dimension(B)
-Matrix product(Matrix A, Matrix B);
+Matrix product(Matrix A, Matrix B){
+    // check for valid matrix
+    if(A == NULL || B == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    if(dimension(A) != dimension(B)){
+        fprintf(stderr, "Matrices of different size!\n");
+        exit(EXIT_FAILURE);
+    }
+    // create new matrix 
+    Matrix C = newMatrix(dimension(A));
+    // iterate thru A & B and store diffs in C
+    for(int i = 1; i <= dimension(A); i++){
+        List row_A = A->rows[i];
+        List row_B = B->rows[i];
+        // go to front of each matrix's row
+        moveFront(row_A);
+        moveFront(row_B);
+        // iterate thru each row while cursor is valid
+        while(position(row_A) >= 0 && position(row_B) >= 0){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            Entry E_B = (Entry)get(row_B);
+            // declare new sum value var
+            double x;
+            // check if both columns exist
+            if(E_A->col == E_B->col){
+                x = E_A->val * E_B->val;
+                if(x != 0){
+                    changeEntry(C, i, E_A->col, x);
+
+                }
+                // move to next entry
+                moveNext(row_A);
+                moveNext(row_B);
+
+            }
+            // check if matrix A has a column, but B does not
+            else if(E_A->col < E_B->col){
+                changeEntry(C, i, E_A->col, E_A->val);
+                // move to next entry
+                moveNext(row_A);
+            }
+            // check if matrix B has a column, but A does not
+            else if(E_B->col < E_A->col){
+                changeEntry(C, i, E_B->col, E_B->val);
+                // move to next entry
+                moveNext(row_B);
+            }
+        }
+        // copy remaining entries from A into C
+        while(position(row_A) >= 0){
+            Entry E_A = (Entry)get(row_A);
+            changeEntry(C, i, E_A->col, E_A->val);
+            moveNext(row_A);
+        }
+        // copy remaining entries from B into C
+        while(position(row_B) >= 0){
+            Entry E_B = (Entry)get(row_B);
+            changeEntry(C, i, E_B->col, E_B->val);
+            moveNext(row_B);
+        }
+    }
+    // return new summed matrix
+    return C;
+}
 
 // Other operations -----------------------------------------------------------
 
