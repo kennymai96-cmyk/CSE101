@@ -106,6 +106,58 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     printf("B has %d non-zero entries:", b);
     printf("\n");
     printMatrix(stdout, B);
+    printf("\n");
+    // print scalar A
+    Matrix C = scalarMult(1.5, A);
+    printf("(1.5)*A = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print sum A + B
+    C = sum(A, B);
+    printf("A+B = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print sum A + A
+    C = sum(A, A);
+    printf("A+A = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print diff B - A
+    C = diff(B, A);
+    printf("B-A = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print diff A - A
+    C = diff(A, A);
+    printf("A-A = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print transpose of A
+    C = transpose(A);
+    printf("Transpose(A) = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print product A * B
+    C = product(A, B);
+    printf("A*B = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print diff A - A
+    C = diff(A, A);
+    printf("A-A = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print product A * B
+    C = product(A, B);
+    printf("A*B = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+    // print product B * B
+    C = product(B, B);
+    printf("B*B = \n");
+    printMatrix(stdout, C);
+    printf("\n");
+
     // print to output file
     fprintf(out, "\n"); 
     // close the input/output file

@@ -457,6 +457,8 @@ Matrix diff(Matrix A, Matrix B){
     return C;
 }
 
+static double dot
+
 // product()
 // Returns a reference to a new Matrix representing AB
 // pre: dimension(A)==dimension(B)
@@ -472,56 +474,28 @@ Matrix product(Matrix A, Matrix B){
     }
     // create new matrix 
     Matrix C = newMatrix(dimension(A));
-    // iterate thru A & B and store diffs in C
+    // create transpose of B
+    Matrix B_T = transpose(B);
+    // declare double to hold dot product
+    double x = 0;
+    // iterate thru A rows
     for(int i = 1; i <= dimension(A); i++){
-        List row_A = A->rows[i];
-        List row_B = B->rows[i];
-        // go to front of each matrix's row
-        moveFront(row_A);
-        moveFront(row_B);
-        // iterate thru each row while cursor is valid
-        while(position(row_A) >= 0 && position(row_B) >= 0){
-            // assign entry pointer with an entry type cast
-            Entry E_A = (Entry)get(row_A);
-            Entry E_B = (Entry)get(row_B);
-            // declare new sum value var
-            double x;
-            // check if both columns exist
-            if(E_A->col == E_B->col){
-                x = E_A->val * E_B->val;
-                if(x != 0){
-                    changeEntry(C, i, E_A->col, x);
-
-                }
-                // move to next entry
-                moveNext(row_A);
-                moveNext(row_B);
-
-            }
-            // check if matrix A has a column, but B does not
-            else if(E_A->col < E_B->col){
-                changeEntry(C, i, E_A->col, E_A->val);
-                // move to next entry
-                moveNext(row_A);
-            }
-            // check if matrix B has a column, but A does not
-            else if(E_B->col < E_A->col){
-                changeEntry(C, i, E_B->col, E_B->val);
-                // move to next entry
-                moveNext(row_B);
-            }
+        // skip empty rows
+        if(length(A->rows[i] == 0)){
+            continue;
         }
-        // copy remaining entries from A into C
-        while(position(row_A) >= 0){
-            Entry E_A = (Entry)get(row_A);
-            changeEntry(C, i, E_A->col, E_A->val);
-            moveNext(row_A);
-        }
-        // copy remaining entries from B into C
-        while(position(row_B) >= 0){
-            Entry E_B = (Entry)get(row_B);
-            changeEntry(C, i, E_B->col, E_B->val);
-            moveNext(row_B);
+        // iterate thru B columns
+        for(int j = 1; j <= dimension(B); j++){
+            // skip empty column
+            if(length(B_T->rows[j]) == 0){
+                continue;
+            }
+            // calculate dot product
+            x = dot(A->rows[i], B_T->rows[j]);
+            // if non-zero enter into output matrix
+            if(x != 0.0){
+                changeEntry(C, i, j, x);
+            }
         }
     }
     // return new summed matrix
