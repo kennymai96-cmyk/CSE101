@@ -457,7 +457,25 @@ Matrix diff(Matrix A, Matrix B){
     return C;
 }
 
-static double dot
+static double dot(List A, List B){
+    // declare dot var
+    double dot = 0.0;
+    // move to front of row and col
+    moveFront(A);
+    moveFront(B);
+    // iterate thru each row and col while cursor valid
+    while(position(A) >= 0 && position(B) >= 0){
+        // grab entry values
+        Entry a = (Entry)get(A);
+        Entry b = (Entry)get(B);
+        // check if col matches
+        if(a->col == b->col){
+            dot += a->val * b->val;
+            moveNext(A);
+            moveNext(B);
+        }
+    }
+}
 
 // product()
 // Returns a reference to a new Matrix representing AB
