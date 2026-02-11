@@ -328,6 +328,10 @@ Matrix sum(Matrix A, Matrix B){
         fprintf(stderr, "Matrices of different size!\n");
         exit(EXIT_FAILURE);
     }
+    // handle equal matrix case
+    if(A == B){
+        return scalarMult(2.0, A);
+    }
     // create new matrix 
     Matrix C = newMatrix(dimension(A));
     // iterate thru A & B and store sums in C
@@ -435,7 +439,7 @@ Matrix diff(Matrix A, Matrix B){
             }
             // check if matrix B has a column, but A does not
             else if(E_B->col < E_A->col){
-                changeEntry(C, i, E_B->col, E_B->val);
+                changeEntry(C, i, E_B->col, -E_B->val);
                 // move to next entry
                 moveNext(row_B);
             }
@@ -449,11 +453,11 @@ Matrix diff(Matrix A, Matrix B){
         // copy remaining entries from B into C
         while(position(row_B) >= 0){
             Entry E_B = (Entry)get(row_B);
-            changeEntry(C, i, E_B->col, E_B->val);
+            changeEntry(C, i, E_B->col, -E_B->val);
             moveNext(row_B);
         }
     }
-    // return new summed matrix
+    // return new diffed matrix
     return C;
 }
 
@@ -526,6 +530,8 @@ Matrix product(Matrix A, Matrix B){
             }
         }
     }
+    // free created matrix
+    freeMatrix(&B_T);
     // return new summed matrix
     return C;
 }
@@ -551,14 +557,14 @@ void printMatrix(FILE* out, Matrix M) {
         // check for non-zero row
         if(length(row) > 0){
             // print row #
-            fprintf(stdout, "%d: ", i);
+            fprintf(out, "%d: ", i);
             // iterate thru row and print col, val pair
             for(moveFront(row); position(row) >= 0; moveNext(row)){
                 Entry E = (Entry)get(row);
-                fprintf(stdout, "(%d , %.1f) ", E->col, E->val);
+                fprintf(out, "(%d, %.1f) ", E->col, E->val);
             }
             // print newline
-            fprintf(stdout, "\n");
+            fprintf(out, "\n");
         }
     }
 }

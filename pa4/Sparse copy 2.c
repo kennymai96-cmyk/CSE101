@@ -22,19 +22,9 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     // FILE *out = out;
     FILE *in  = fopen(argv[1], "r");  // open input file for reading
     FILE *out = fopen(argv[2], "w");  // open output file for writing
-    /*
+
     if (in == NULL || out == NULL) {  // check for valid input and output file
         fprintf(stderr, "Unable to open file\n");
-        exit(EXIT_FAILURE);
-    }*/
-    if (in == NULL) {
-        fprintf(stderr, "Failed to open input file: %s\n", argv[1]);
-        exit(EXIT_FAILURE);
-    }
-
-    if (out == NULL) {
-        fprintf(stderr, "Failed to open output file: %s\n", argv[2]);
-        fclose(in);
         exit(EXIT_FAILURE);
     }
     // define line size
