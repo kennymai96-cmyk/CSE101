@@ -474,7 +474,17 @@ static double dot(List A, List B){
             moveNext(A);
             moveNext(B);
         }
+        // check if a col exists, but b does not
+        else if(a->col < b->col){
+            moveNext(A);
+        }
+        // handle case where b exists, but a does not
+        else{
+            moveNext(B);
+        }
     }
+    // return calced dot product
+    return dot;
 }
 
 // product()
@@ -499,7 +509,7 @@ Matrix product(Matrix A, Matrix B){
     // iterate thru A rows
     for(int i = 1; i <= dimension(A); i++){
         // skip empty rows
-        if(length(A->rows[i] == 0)){
+        if(length(A->rows[i]) == 0){
             continue;
         }
         // iterate thru B columns
