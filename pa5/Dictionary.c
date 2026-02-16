@@ -25,15 +25,23 @@ const int TableSizeThreshold = 50000;
 const int TableEmpty = 0;
 const int TableDeleted = -1;
 
+// Constants for data array (dense, dictionary data)
+const size_t DataInitialSize = 1;
+const double DataExpandFactor = 1.5;
+const double DataDensityThreshold = 0.8;
+const keyType DataEmpty = NULL;
+const char dummy[] = {255, 0}; // array is const
+const keyType DataDeleted = dummy; // pointer is const
+
 // define triple type contained in dense array
 typedef struct Element{
     keyType key;
-    valType value;
+    valType val;
     codeType code;
 } Element;
 
 // define DictionaryObh
-typedef struct DictionaryObj{
+struct DictionaryObj{
     // define sparse array hash table
     // runs hash function on key to determine look up/insertion location
     int64_t* table;
@@ -55,26 +63,112 @@ typedef struct DictionaryObj{
 // newDictionary()
 // Constructs a new empty Dictionary.
 Dictionary newDictionary(void){
+    // allocate memory for Dictionary and check success
     Dictionary D = malloc(sizeof(struct DictionaryObj));
-    D->table = malloc(TableInitialSize*sizeof(uint64_t));
-    D->table_size = 8;
-    D->table_load_factor = 
-
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary memory allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // allocate memory for sparse array and check success
+    D->table = calloc(TableInitialSize, sizeof(int64_t));
+    if (D->table == NULL) {
+        free(D);
+        fprintf(stderr, "Sparse array allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // allocate memory for dense array and check success
+    D->data = malloc(DataInitialSize * sizeof(Element));
+    if (D->data == NULL) {
+        free(D->table);
+        free(D);
+        fprintf(stderr, "Dense array allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // init element vars
+    D->data[0].key = DataEmpty;
+    D->data[0].val  = 0;
+    D->data[0].code = 0;
+    // init sparse array vars
+    D->table_size = TableInitialSize;
+    D->table_load_factor = 0.0;
+    // init dense array vars
+    D->data_size = DataInitialSize;
+    D->data_index_next = 1;
+    // init tracking vars
+    D->num_pairs = 0;
+    D->num_holes = 0;
+    D->data_density = 1.0;
+    // return new Dictionary
+    return D;
 }
 
 // freeDictionary()
 // Frees heap memory associated with *pD, and sets *pD to NULL.
+void freeDictionary(Dictionary* pD){
+    // check for valid dictionary pointer
+    if(pD == NULL || *pD == NULL){
+        fprintf(stderr, "NULL dictionary pointer!\n");
+        exit(EXIT_FAILURE);
+    }
+    // assign dictionaryobj pointer to input
+    Dictionary D = *pD;
+    // free both arrays and dictionary itself
+    free(D->table);
+    free(D->data);
+    free(D);
+    // free dictionary pointer
+    *pD = NULL;
+}
 
-void freeDictionary(Dictionary* pD);
 // Access functions -----------------------------------------------------------
 
 // size()
 // Returns the number of key-value pairs in D.
-int size(Dictionary D);
+int size(Dictionary D){
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // return num of key-value pairs
+    return D->num_pairs;
+}
 
 // contains()
 // Returns true if D contains a pair with key k, returns false otherwise.
-bool contains(Dictionary D, keyType k);
+bool contains(Dictionary D, keyType k){
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // generate hash code
+    codeType code = hash(k);
+    // check if hash code is legit
+    if (k == NULL) {
+        fprintf(stderr, "Hash code is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // iterate thru sparse array and probe for available slots
+    for(size_t i = 0; i < D->table_size; i++){
+        size_t slot = probe(code, D->table_size, i);
+        int64_t index = D->table[slot];
+        // check if index is empty, if so return false
+        if(index == TableEmpty){
+            return false;
+        }
+        // check if index is deleted, if so continue
+        if(index == TableDeleted){
+            continue;
+        }
+        // if index is not empty or deleted
+        // check if the hash code equals the code in table
+        // check if the input key equals the key in table 
+        if((D->data[index].code == code) && (strcmp(D->data[index].key, k) == 0)){
+            return true;
+        }
+    }
+    // catch-all if no match found
+    return false;
+}
 
 // getValue()
 // Returns the value associated with key k.
@@ -121,6 +215,7 @@ void printDictionary(FILE* out, Dictionary D);
 void printDiagnostic(FILE* out, Dictionary D);
 
 // Required Helper functions ---------------------------------------------------
+
 // hash()
 // Returns the hash code for key k.
 codeType hash(keyType k) {
@@ -135,6 +230,7 @@ codeType hash(keyType k) {
  }
  return result;
 }
+
 // probe()
 // Returns the ith term in the probe sequence for code.
 size_t probe(codeType code, size_t tbl_size, size_t i){
@@ -142,6 +238,7 @@ size_t probe(codeType code, size_t tbl_size, size_t i){
  codeType h2 = 2*(code & (tbl_size/2 - 1)) + 1; // 2*(code % tbl_size/2) + 1
  return (h1 + i*h2) & (tbl_size-1); // (h1 + i*h2) % tbl_size
 }
+
 // Optional Helper functions ---------------------------------------------------
 
 // findSlot()
