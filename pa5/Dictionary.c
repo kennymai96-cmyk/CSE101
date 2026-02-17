@@ -60,6 +60,196 @@ struct DictionaryObj{
     double data_density;
 };
 
+// Required Helper functions ---------------------------------------------------
+
+// hash()
+// Returns the hash code for key k.
+codeType hash(keyType k) {
+ codeType magicNumber1 = 0xcbf29ce484222325;
+ codeType magicNumber2 = 0x100000001b3;
+ codeType result = magicNumber1;
+ codeType nextChar = *k; // get 1st char in k
+ while( nextChar ) { // while not at end of k
+ result ^= nextChar; // result = result (exor) nextChar
+ result *= magicNumber2; // result = result * magicNumber2
+ nextChar = *(++k); // get next char
+ }
+ return result;
+}
+
+// probe()
+// Returns the ith term in the probe sequence for code.
+size_t probe(codeType code, size_t tbl_size, size_t i){
+ codeType h1 = code & (tbl_size-1); // code % tbl_size
+ codeType h2 = 2*(code & (tbl_size/2 - 1)) + 1; // 2*(code % tbl_size/2) + 1
+ return (h1 + i*h2) & (tbl_size-1); // (h1 + i*h2) % tbl_size
+}
+
+// Optional Helper functions ---------------------------------------------------
+
+// findSlot()
+// Steps through the probe sequence for code=hash(k). If the Dictionary contains
+// key k, returns the slot in D->table containing the index of key k in D->data.
+// Otherwise, returns the first slot in D->table that contains either the special
+// value TableEmpty or the special value TableDeleted.
+uint64_t findSlot(Dictionary D, keyType k, codeType code){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check if key is legit
+    if (k == NULL) {
+        fprintf(stderr, "Key is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // init deleted slot tracker
+    int64_t del_slot = -1;
+    // iterate thru sparse array and probe for available slots
+    for(size_t i = 0; i < D->table_size; i++){
+        size_t slot = probe(code, D->table_size, i);
+        int64_t index = D->table[slot];
+        // check if index is empty
+        // if a deleted slot has been encountered, return it
+        // otherwise return current slot
+        if(index == TableEmpty){
+            if(del_slot != -1){
+                return del_slot;
+            }
+            return slot;
+        }
+        // check if index is deleted
+        // check if del slot has been encountered
+        // if not set current slot as del slot and continue
+        if(index == TableDeleted){
+            if(del_slot == -1){
+                del_slot = slot;
+            }
+            continue;
+        }
+        // if index is not empty or deleted
+        // check if the hash code equals the code in table
+        // check if the input key equals the key in table 
+        if((D->data[index].code == code) && (strcmp(D->data[index].key, k) == 0)){
+            return slot;
+        }
+    }
+}
+
+// insertIndex()
+// Steps through the probe sequence for code and inserts idx into the first
+// slot in array T (of length m) at which either the special value TableEmpty
+// or the special value TableDeleted are found.
+void insertIndex(int64_t* T, size_t m, size_t idx, codeType code){
+    // iterate thru new sparse array
+    for(size_t i = 0; i < m; i++){
+        size_t slot = probe(code, m, i);
+        // check if index is empty or deleted
+        // assign current slot with inputted index
+        if((T[slot] == TableEmpty) || (T[slot] == TableDeleted)){
+            T[slot] = idx;
+            return;
+        }
+    }
+    // if no insertion takes place
+    fprintf(stderr, "No valid insertion target!");
+    exit(EXIT_FAILURE);
+}
+
+// expandTable()
+// Expands length of array D->table. If tableSize<TableSizeThreshold, increases
+// size by TableExpandFactor1, otherwise increases size by TableExpandFactor2.
+// Re-inserts indices of D->data into D->table.
+void expandTable(Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // compact data if eligible
+    if(D->data_density < DataDensityThreshold){
+        compactData(D);
+    }
+    // init new sparse array size var
+    size_t size_new = 0;
+    // check which expansion factor to use
+    if(D->table_size < TableSizeThreshold){
+        size_new = D->table_size * TableExpandFactor1;
+    }
+    else{
+        size_new = D->table_size * TableExpandFactor2;
+    }
+    // allocate memory for new sparse array
+    int64_t* T_new = calloc(size_new, sizeof(int64_t));
+    if (T_new == NULL) {
+        fprintf(stderr, "Table expansion failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // iterate thru new sparse array and re-insert indices
+    for(size_t i = 1; i < D->data_index_next; i++){
+        if(D->data[i].key != DataDeleted){
+            insertIndex(T_new, size_new, i, D->data[i].code);
+        }
+    }
+    // free old table
+    free(D->table);
+    // assign new table vars
+    D->table = T_new;
+    D->table_size = size_new;
+    // calc load factor
+    D->table_load_factor = (double)D->num_pairs / D->table_size;
+}
+
+// expandData()
+// Expands length of array D->data, leaving contents unchanged.
+void expandData(Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // init new dense array size var
+    uint64_t size_new = 0; 
+    size_new = ceil((D->data_size * DataExpandFactor));
+    // allocate memory for new dense array
+    Element* D_new = realloc(D->data, size_new * sizeof(Element));
+    if(D_new == NULL){
+        fprintf(stderr, "Data expansion failed\n");
+        exit(EXIT_FAILURE);
+    }
+    // assign new data vars
+    D->data = D_new;
+    D->data_size = size_new;
+}
+
+// compactData()
+// Removes the deleted elements from array D->data, making its entries contiguous,
+// and sets D->dataDensity equal to 1.
+void compactData(Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // declare var to track new indices
+    uint64_t new = 1;
+    // iterate thru dense array and check for holes
+    // if key is not a hole, update current index with old index's key
+    // increment new index and repeat check for holes
+    for(size_t old = 1; old < D->data_index_next; old++){
+        if(D->data[old].key != DataDeleted){
+            if(new != old){
+                D->data[new] = D->data[old];
+            }
+            new++;
+        }
+    }
+    // update tracking vars
+    D->data_index_next = new;
+    D->num_holes = 0;
+    D->data_density = 1.0;
+}
+
 // Constructors-Destructors ---------------------------------------------------
 
 // newDictionary()
@@ -480,192 +670,3 @@ void printDiagnostic(FILE* out, Dictionary D){
     fprintf(out, "********************************************\n");
 }
 
-// Required Helper functions ---------------------------------------------------
-
-// hash()
-// Returns the hash code for key k.
-codeType hash(keyType k) {
- codeType magicNumber1 = 0xcbf29ce484222325;
- codeType magicNumber2 = 0x100000001b3;
- codeType result = magicNumber1;
- codeType nextChar = *k; // get 1st char in k
- while( nextChar ) { // while not at end of k
- result ^= nextChar; // result = result (exor) nextChar
- result *= magicNumber2; // result = result * magicNumber2
- nextChar = *(++k); // get next char
- }
- return result;
-}
-
-// probe()
-// Returns the ith term in the probe sequence for code.
-size_t probe(codeType code, size_t tbl_size, size_t i){
- codeType h1 = code & (tbl_size-1); // code % tbl_size
- codeType h2 = 2*(code & (tbl_size/2 - 1)) + 1; // 2*(code % tbl_size/2) + 1
- return (h1 + i*h2) & (tbl_size-1); // (h1 + i*h2) % tbl_size
-}
-
-// Optional Helper functions ---------------------------------------------------
-
-// findSlot()
-// Steps through the probe sequence for code=hash(k). If the Dictionary contains
-// key k, returns the slot in D->table containing the index of key k in D->data.
-// Otherwise, returns the first slot in D->table that contains either the special
-// value TableEmpty or the special value TableDeleted.
-uint64_t findSlot(Dictionary D, keyType k, codeType code){
-    // check if dictionary is legit
-    if (D == NULL) {
-        fprintf(stderr, "Dictionary is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-    // check if key is legit
-    if (k == NULL) {
-        fprintf(stderr, "Key is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-    // init deleted slot tracker
-    int64_t del_slot = -1;
-    // iterate thru sparse array and probe for available slots
-    for(size_t i = 0; i < D->table_size; i++){
-        size_t slot = probe(code, D->table_size, i);
-        int64_t index = D->table[slot];
-        // check if index is empty
-        // if a deleted slot has been encountered, return it
-        // otherwise return current slot
-        if(index == TableEmpty){
-            if(del_slot != -1){
-                return del_slot;
-            }
-            return slot;
-        }
-        // check if index is deleted
-        // check if del slot has been encountered
-        // if not set current slot as del slot and continue
-        if(index == TableDeleted){
-            if(del_slot == -1){
-                del_slot = slot;
-            }
-            continue;
-        }
-        // if index is not empty or deleted
-        // check if the hash code equals the code in table
-        // check if the input key equals the key in table 
-        if((D->data[index].code == code) && (strcmp(D->data[index].key, k) == 0)){
-            return slot;
-        }
-    }
-}
-
-// insertIndex()
-// Steps through the probe sequence for code and inserts idx into the first
-// slot in array T (of length m) at which either the special value TableEmpty
-// or the special value TableDeleted are found.
-void insertIndex(int64_t* T, size_t m, size_t idx, codeType code){
-    // iterate thru new sparse array
-    for(size_t i = 0; i < m; i++){
-        size_t slot = probe(code, m, i);
-        // check if index is empty or deleted
-        // assign current slot with inputted index
-        if((T[slot] == TableEmpty) || (T[slot] == TableDeleted)){
-            T[slot] = idx;
-            return;
-        }
-    }
-    // if no insertion takes place
-    fprintf(stderr, "No valid insertion target!");
-    exit(EXIT_FAILURE);
-}
-
-// expandTable()
-// Expands length of array D->table. If tableSize<TableSizeThreshold, increases
-// size by TableExpandFactor1, otherwise increases size by TableExpandFactor2.
-// Re-inserts indices of D->data into D->table.
-void expandTable(Dictionary D){
-    // check if dictionary is legit
-    if (D == NULL) {
-        fprintf(stderr, "Dictionary is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-    // compact data if eligible
-    if(D->data_density < DataDensityThreshold){
-        compactData(D);
-    }
-    // init new sparse array size var
-    size_t size_new = 0;
-    // check which expansion factor to use
-    if(D->table_size < TableSizeThreshold){
-        size_new = D->table_size * TableExpandFactor1;
-    }
-    else{
-        size_new = D->table_size * TableExpandFactor2;
-    }
-    // allocate memory for new sparse array
-    int64_t* T_new = calloc(size_new, sizeof(int64_t));
-    if (T_new == NULL) {
-        fprintf(stderr, "Table expansion failed!\n");
-        exit(EXIT_FAILURE);
-    }
-    // iterate thru new sparse array and re-insert indices
-    for(size_t i = 1; i < D->data_index_next; i++){
-        if(D->data[i].key != DataDeleted){
-            insertIndex(T_new, size_new, i, D->data[i].code);
-        }
-    }
-    // free old table
-    free(D->table);
-    // assign new table vars
-    D->table = T_new;
-    D->table_size = size_new;
-    // calc load factor
-    D->table_load_factor = (double)D->num_pairs / D->table_size;
-}
-
-// expandData()
-// Expands length of array D->data, leaving contents unchanged.
-void expandData(Dictionary D){
-    // check if dictionary is legit
-    if (D == NULL) {
-        fprintf(stderr, "Dictionary is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-    // init new dense array size var
-    uint64_t size_new = 0; 
-    size_new = ceil((D->data_size * DataExpandFactor));
-    // allocate memory for new dense array
-    Element* D_new = realloc(D->data, size_new * sizeof(Element));
-    if(D_new == NULL){
-        fprintf(stderr, "Data expansion failed\n");
-        exit(EXIT_FAILURE);
-    }
-    // assign new data vars
-    D->data = D_new;
-    D->data_size = size_new;
-}
-
-// compactData()
-// Removes the deleted elements from array D->data, making its entries contiguous,
-// and sets D->dataDensity equal to 1.
-void compactData(Dictionary D){
-    // check if dictionary is legit
-    if (D == NULL) {
-        fprintf(stderr, "Dictionary is NULL!\n");
-        exit(EXIT_FAILURE);
-    }
-    // declare var to track new indices
-    uint64_t new = 1;
-    // iterate thru dense array and check for holes
-    // if key is not a hole, update current index with old index's key
-    // increment new index and repeat check for holes
-    for(size_t old = 1; old < D->data_index_next; old++){
-        if(D->data[old].key != DataDeleted){
-            if(new != old){
-                D->data[new] = D->data[old];
-            }
-            new++;
-        }
-    }
-    // update tracking vars
-    D->data_index_next = new;
-    D->num_holes = 0;
-    D->data_density = 1.0;
-}
