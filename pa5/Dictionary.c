@@ -211,7 +211,7 @@ valType getValue(Dictionary D, keyType k){
         }
     }
     // if value associated with key not found
-    fprintf(stderr,"Dictionary Error: key not found in getValue()\n");
+    fprintf(stderr,"Key value pair not found!\n");
     exit(EXIT_FAILURE);
 }
 
@@ -225,7 +225,21 @@ void clear(Dictionary D){
         fprintf(stderr, "Dictionary is NULL!\n");
         exit(EXIT_FAILURE);
     }
-
+    // iterate thru sparse array and set to empty
+    for(size_t i = 0; i < D->table_size; i++){
+        D->table[i] = TableEmpty;
+    }
+    // reset element vars
+    D->data[0].key = DataEmpty;
+    D->data[0].val  = 0;
+    D->data[0].code = 0;
+    // reset insertion index
+    D->data_index_next = 1;
+    // reset tracking vars
+    D->num_pairs = 0;
+    D->num_holes = 0;
+    D->table_load_factor = 0.0;
+    D->data_density = 1.0;
 }
 
 // setValue()
@@ -283,18 +297,132 @@ void setValue(Dictionary D, keyType k, valType v){
 // removeKey()
 // Deletes the pair with key==k from D.
 // pre: contains(D, k)
-void removeKey(Dictionary D, keyType k);
+void removeKey(Dictionary D, keyType k){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check if key is legit
+    if (k == NULL) {
+        fprintf(stderr, "Key is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // generate hash code
+    codeType code = hash(k);
+    // iterate thru sparse array and probe for available slots
+    for(size_t i = 0; i < D->table_size; i++){
+        size_t slot = probe(code, D->table_size, i);
+        int64_t index = D->table[slot];
+        // check if index is empty, if so break
+        if(index == TableEmpty){
+            break;
+        }
+        // check if index is deleted, if so continue
+        if(index == TableDeleted){
+            continue;
+        }
+        // if index is not empty or deleted
+        // check if the hash code equals the code in table
+        // check if the input key equals the key in table 
+        // delete the pair from D and update all vars
+        if((D->data[index].code == code) && (strcmp(D->data[index].key, k) == 0)){
+            D->table[slot] = TableDeleted;
+            D->data[index].key = DataDeleted;
+            D->num_pairs--;
+            D->num_holes++;
+            D->data_density = (double)D->num_pairs / (D->num_pairs + D->num_holes);
+            D->table_load_factor = (double)D->num_pairs / D->table_size;
+            return;
+        }
+    }
+    // if value associated with key not found
+    fprintf(stderr,"Key value pair not found!\n");
+    exit(EXIT_FAILURE);
+}
 
 // Other operations -----------------------------------------------------------
 
 // copy()
 // Returns a new Dictionary containing the same key-value pairs as D.
-Dictionary copy(Dictionary D);
+Dictionary copy(Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // allocate memory for copy dictionary
+    Dictionary C = malloc(sizeof(struct DictionaryObj));
+    if (C == NULL) {
+        fprintf(stderr, "Dictionary memory allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // copy fields from OG into copy dictionary
+    C->table_size = D->table_size;
+    C->table_load_factor = D->table_load_factor;
+    C->data_size = D->data_size;
+    C->data_index_next = D->data_index_next;
+    C->num_pairs = D->num_pairs;
+    C->num_holes = D->num_holes;
+    C->data_density = D->data_density;
+    // allocate memory for sparse array and check success
+    C->table = calloc(C->table_size, sizeof(int64_t));
+    if (C->table == NULL) {
+        free(C);
+        fprintf(stderr, "Sparse array allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    // iterate thru sparse array and insert indices from OG into copy dictionary
+    for(size_t i = 0; i < C->table_size; i++){
+        C->table[i] = D->table[i];
+    }
+    // allocate memory for dense array and check success
+    C->data = malloc(C->data_size * sizeof(Element));
+    if (C->data == NULL) {
+        free(C->table);
+        free(C);
+        fprintf(stderr, "Dense array allocation failed!\n");
+        exit(EXIT_FAILURE);
+    }
+    for(size_t i = 0; i < C->data_size; i++){
+        C->data[i].key = D->data[i].key;
+        C->data[i].val  = D->data[i].val;
+        C->data[i].code = D->data[i].code;
+    }
+    return C;
+}
 
 // equals()
 // Returns true if A and B contain the same key-value pairs, and returns false
 // otherwise.
-bool equals(Dictionary A, Dictionary B);
+bool equals(Dictionary A, Dictionary B){
+    // check if both dictionaries are legit
+    if (A == NULL || B == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check if each dictionary is the same size
+    // if not return false
+    if(A->num_pairs != B->num_pairs){
+        return false;
+    }
+    // iterate thru dictionary A and check for non-hole entries
+    // if a valid pair is found, check if B contains the key/value
+    for(size_t i = 1; i < A->data_index_next; i++){
+        if(A->data[i].key != DataDeleted){
+            keyType k = A->data[i].key;
+            valType v = A->data[i].val;
+            if(contains(B, k) == false){
+                return false;
+            }
+            if(getValue(B, k) != v){
+                return false;
+            }
+        }
+    }
+    // return true if checks are successful
+    return true;
+}
 
 // printDictionary()
 // Prints a string representation of Dictionary D to the FILE pointer out. Each
