@@ -428,13 +428,57 @@ bool equals(Dictionary A, Dictionary B){
 // Prints a string representation of Dictionary D to the FILE pointer out. Each
 // key-value pair is printed on its own line in the form "key : value". Pairs
 // will appear in the order in which they were inserted into the Dictionary.
-void printDictionary(FILE* out, Dictionary D);
+void printDictionary(FILE* out, Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n");
+        exit(EXIT_FAILURE);
+    }
+    // iterate thru dictionary and check for non-hole entries
+    // if a valid pair is found, check if B contains the key/value
+    for(size_t i = 1; i < D->data_index_next; i++){
+        if(D->data[i].key != DataDeleted){
+            keyType k = D->data[i].key;
+            valType v = D->data[i].val;
+            fprintf(out, "%s : %d\n", k, v);
+        }
+    }
+}
 
 // printDiagnostic()
 // Prints a string representation of the internal state of Dictionary D to FILE
 // out. First D->data is printed with accompanying parameters, then D->table
 // is printed with its accompanying parameters.
-void printDiagnostic(FILE* out, Dictionary D);
+void printDiagnostic(FILE* out, Dictionary D){
+    // check if dictionary is legit
+    if (D == NULL) {
+        fprintf(stderr, "Dictionary is NULL!\n\n");
+        exit(EXIT_FAILURE);
+    }
+    fprintf(out, "***print diagnostic*************************\n");
+    fprintf(out, "Data:\n");
+    // iterate thru data table and print key: value: hash
+    for(size_t i = 0; i < D->data_size; i++){
+        keyType k = D->data[i].key;
+        valType v = D->data[i].val;
+        codeType c = D->data[i].code;
+        fprintf(out, "%s : %d : %llu\n", k ? k : "(null)", v, c);
+    }
+    // print tracking vars
+    fprintf(out, "numPairs: %d\n", D->num_pairs);
+    fprintf(out, "numDeleted: %d\n", D->num_holes);
+    fprintf(out, "dataSize: %zu\n", D->data_size);
+    fprintf(out, "dataNextIndex: %zu\n", D->data_index_next);
+    fprintf(out, "dataDensity: %.6f\n", D->data_density);
+    // print sparse array info
+    fprintf(out, "Table:\n");
+    for(size_t i = 0; i < D->table_size; i++){
+        fprintf(out, "%zu : %d\n", i, D->table[i]);
+    }
+    fprintf(out, "tableSize: %zu\n", D->table_size);
+    fprintf(out, "tableLoadFactor: %.6f\n", D->table_load_factor);
+    fprintf(out, "********************************************\n");
+}
 
 // Required Helper functions ---------------------------------------------------
 
