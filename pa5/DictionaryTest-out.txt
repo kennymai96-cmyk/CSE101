@@ -1,0 +1,19 @@
+
+
+Test Empty_diagnostic: [0;32mPASSED[0m
+Test Insert_diagnostic: [0;32mPASSED[0m
+Test Unique_keys_insertion: [0;32mPASSED[0m
+Test Lookup_overwrite: [0;32mPASSED[0m
+Test Remove_diagnostic: [0;32mPASSED[0m
+Test Deletion_recycling: [0;32mPASSED[0m
+Test Copy_independence: [0;32mPASSED[0m
+Test Equals_consistency: [0;32mPASSED[0m
+Test Stress_expand: [0;32mPASSED[0m
+Test Clear_basic: [0;32mPASSED[0m
+Test Print_insert_order: [0;32mPASSED[0m
+Test Expand_compact: [0;32mPASSED[0m
+
+You passed 12 out of 12 tests
+
+You will receive 60 out of 60 possible points on the DictionaryTest
+
