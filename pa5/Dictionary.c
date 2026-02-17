@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <stdint.h>
 #include <math.h>
+#include <string.h>
 #include "Dictionary.h"
 
 // alias for uint64
@@ -52,8 +53,8 @@ struct DictionaryObj{
     // contains (key, value, code)
     Element* data;
     uint64_t data_size;
-    uint64_t data_index_next;
     // define tracking vars
+    uint64_t data_index_next;
     uint64_t num_pairs;
     uint64_t num_holes;
     double data_density;
@@ -243,36 +244,40 @@ void setValue(Dictionary D, keyType k, valType v){
     }
     // generate hash code
     codeType code = hash(k);
-    // init deleted slot tracker
-    int64_t del_slot = -1;
-    // iterate thru sparse array and probe for available slots
-    for(size_t i = 0; i < D->table_size; i++){
-        size_t slot = probe(code, D->table_size, i);
-        int64_t index = D->table[slot];
-        // check if index is empty, if so insert here and break
-        if(index == TableEmpty){
-            D->data[index].val = v;
-            break;
-        }
-        // check if index is deleted, if so assign new deleted spot
-        // as current slot and continue
-        if(index == TableDeleted){
-            if(del_slot == -1){
-                del_slot = slot;
-            }
-            continue;
-        }
-        // if index is not empty or deleted
-        // check if the hash code equals the code in table
-        // check if the input key equals the key in table 
-        // overwrite key's value
-        if((D->data[index].code == code) && (strcmp(D->data[index].key, k) == 0)){
-          D->data[index].val = v;
-          return;
-        }
+    // find a slot in table and return index from table
+    size_t slot = findSlot(D, k, code);
+    int64_t index = D->table[slot];
+    // check if index is not empty or deleted, aka exists already
+    // if not, overwrite value with input value and return
+    if((index != TableEmpty) && (index != TableDeleted)){
+        D->data[index].val = v;
+        return;
     }
-    // if no match for key, add new pair (k,v) into D
-
+    // check load factor, and expand if necessary
+    if(((double)(D->num_pairs + 1) / D->table_size) > TableLoadFactorThreshold){
+        expandTable(D);
+        // Recompute new slot from new table
+        slot = findSlot(D, k, code);
+    }
+    // check if expansion is needed for new pair
+    if(D->data_index_next == D->data_size){
+        expandData(D);
+    }
+    // declare var to hold index of next insertion
+    uint64_t idx = D->data_index_next;
+    // insert data into next location
+    D->data[idx].key = k;
+    D->data[idx].val = v;
+    D->data[idx].code = code;
+    // insert index into sparse table
+    D->table[slot] = idx;
+    // update tracking vars
+    D->data_index_next++;
+    D->num_pairs++;
+    // update load factor
+    D->table_load_factor = (double)D->num_pairs / D->table_size;
+    // update data density
+    D->data_density = (double)D->num_pairs / (D->num_pairs + D->num_holes);
 }
 
 // removeKey()
@@ -474,4 +479,21 @@ void compactData(Dictionary D){
         fprintf(stderr, "Dictionary is NULL!\n");
         exit(EXIT_FAILURE);
     }
+    // declare var to track new indices
+    uint64_t new = 1;
+    // iterate thru dense array and check for holes
+    // if key is not a hole, update current index with old index's key
+    // increment new index and repeat check for holes
+    for(size_t old = 1; old < D->data_index_next; old++){
+        if(D->data[old].key != DataDeleted){
+            if(new != old){
+                D->data[new] = D->data[old];
+            }
+            new++;
+        }
+    }
+    // update tracking vars
+    D->data_index_next = new;
+    D->num_holes = 0;
+    D->data_density = 1.0;
 }
