@@ -111,7 +111,7 @@ ListElement List::back() const {
         throw std::length_error("Empty List!");
     }
     // can't use cursor because const stops modification
-    // return the first element
+    // return the last element
     return backDummy->prev->data;
 }
 
@@ -125,23 +125,49 @@ int List::position() const {
 // Returns the element after the cursor.
 // pre: position()<length()
 ListElement List::peekNext() const {
-    // TODO
+    if(pos_cursor >= length()){
+        throw std::length_error("At end of List!");
+    }
+    // can't use cursor because const stops modification
+    // return element after cursor
+    return afterCursor->data;
 }
 
 // peekPrev()
 // Returns the element before the cursor.
 // pre: position()>0
 ListElement List::peekPrev() const {
-    // TODO
+    if(pos_cursor >= length()){
+        throw std::length_error("At end of List!");
+    }
+    // can't use cursor because const stops modification
+    // return element after cursor
+    return beforeCursor->data;
 }
-
 
 // Manipulation procedures -------------------------------------------------
 
 // clear()
 // Deletes all elements in this List, setting it to the empty state.
 void List::clear() {
-    // TODO
+    // declare node pointer to reference elements
+    Node* N = frontDummy->next;
+    // iterate thru list until backDummy is encountered
+    // point to next node and delete current one
+    while(N != backDummy){
+        Node* next = N->next;
+        delete N;
+        N = next;
+    }
+    // reconnect dummies
+    frontDummy->next = backDummy;
+    backDummy->prev = frontDummy;
+    // reset cursor
+    beforeCursor = frontDummy;
+    afterCursor = backDummy;
+    // reset tracking vars
+    pos_cursor = 0;
+    num_elements = 0;
 }
 
 // moveFront()
