@@ -137,8 +137,8 @@ ListElement List::peekNext() const {
 // Returns the element before the cursor.
 // pre: position()>0
 ListElement List::peekPrev() const {
-    if(pos_cursor >= length()){
-        throw std::length_error("At end of List!");
+    if(pos_cursor <= 0){
+        throw std::length_error("At front of List!");
     }
     // can't use cursor because const stops modification
     // return element after cursor
@@ -326,6 +326,8 @@ void List::eraseBefore() {
     prev->next = afterCursor;
     // delete node
     delete del;
+    // decrement cursor
+    pos_cursor--;
     // decrement num of elements in list
     num_elements--;
 }
@@ -394,13 +396,28 @@ void List::cleanup() {
             if(N->data == next->data){
                 Node* del = next;
                 next = next->next;
-                // adjust cursor if they point to node being delted
+                // adjust cursor if they point to node being deleted
                 if (del == beforeCursor) {
                     beforeCursor = beforeCursor->prev;
                     pos_cursor--;
                 }
-                if (del == afterCursor) {
+                else if (del == afterCursor) {
                     afterCursor = afterCursor->next;
+                }
+                // check if node being deleted is not case 1 or 2 above
+                // if it is walk the list until you encounter the delete target
+                // check if your traversal count is less than cursor position
+                // if so, decrement cursor
+                else{
+                    Node* N = frontDummy->next;
+                    int i = 0;
+                    while(N != del){
+                        N = N->next;
+                        i++;
+                    }
+                    if(i < pos_cursor){
+                        pos_cursor--;
+                    }
                 }
                 del->prev->next = del->next;
                 del->next->prev = del->prev;
@@ -423,6 +440,8 @@ void List::cleanup() {
 List List::concat(const List& L) const {
     // create new empty list
     List cat;
+    // move to back of this list as dividing line for insertions
+    cat.moveBack();
     // assign node for traversal
     Node* N = frontDummy->next;
     // iterate until backdummy is hit for the calling list
@@ -508,12 +527,13 @@ bool operator==( const List& A, const List& B ) {
 // Overwrites the state of this List with state of L.
 List& List::operator=( const List& L ) {
     // check if both pointers are the same
-    // if not clear this list
+    // if not clear this list and move to front of this list
     // iterate thru list with temp node and insert contents into this list
     if(this != &L){
-        this->clear();
-        Node* N = frontDummy->next;
-        while(N != backDummy){
+        clear();
+        moveFront();
+        Node* N = L.frontDummy->next;
+        while(N != L.backDummy){
             this->insertAfter(N->data);
             this->moveNext();
             N = N->next;
