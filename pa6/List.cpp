@@ -268,29 +268,67 @@ void List::setAfter(ListElement x) {
     if(position() >= length()){
         throw std::length_error("Cursor at the back!");
     }
+    // update next node with x
+    afterCursor->data = x;
 }
 
 // setBefore()
 // Overwrites the List element before the cursor with x.
 // pre: position()>0
 void List::setBefore(ListElement x) {
-    // TODO
+    // check if cursor is already at the front of list
+    if(position() <= 0){
+        throw std::length_error("Cursor at the front!");
+    }
+    // update prev node with x
+    beforeCursor->data = x;
 }
 
 // eraseAfter()
 // Deletes element after cursor.
 // pre: position()<length()
 void List::eraseAfter() {
-    // TODO
+    // check if cursor is already at the back of list
+    if(position() >= length()){
+        throw std::length_error("Cursor at the back!");
+    }
+    // assign node for deletion
+    Node* del = afterCursor;
+    // save temp node for later relink
+    Node* next = afterCursor->next;
+    // reorient cursors
+    beforeCursor->next = next;
+    afterCursor = next;
+    // link new node
+    next->prev = beforeCursor;
+    // delete node
+    delete del;
+    // decrement num of elements in list
+    num_elements--;
 }
 
 // eraseBefore()
 // Deletes element before cursor.
 // pre: position()>0
 void List::eraseBefore() {
-    // TODO
+    // check if cursor is already at the front of list
+    if(position() <= 0){
+        throw std::length_error("Cursor at the front!");
+    }
+    // assign node for deletion
+    Node* del = beforeCursor;
+    // save temp node for later relink
+    Node* prev = beforeCursor->prev;
+    // reorient cursors
+    beforeCursor = prev;
+    afterCursor->prev = prev;
+    // link new node
+    prev->next = afterCursor;
+    // delete node
+    delete del;
+    // decrement num of elements in list
+    num_elements--;
 }
-
 
 // Other Functions ---------------------------------------------------------
 
@@ -301,7 +339,18 @@ void List::eraseBefore() {
 // returns the final cursor position. If x is not found, places the cursor 
 // at position length(), and returns -1. 
 int List::findNext(ListElement x) {
-    // TODO
+    // iterate thru list from current cursor until backDummy is encountered
+    // move cursor after found element
+    // return cursor position if element is found
+    while(afterCursor != backDummy){
+        if(afterCursor->data == x){
+            moveNext();
+            return pos_cursor;
+        }
+        moveNext();
+    }
+    // return -1 if x not found
+    return -1;
 }
 
 // findPrev()
@@ -311,7 +360,18 @@ int List::findNext(ListElement x) {
 // returns the final cursor position. If x is not found, places the cursor 
 // at position 0, and returns -1. 
 int List::findPrev(ListElement x) {
-    // TODO
+    // iterate thru list from current cursor until frontDummy is encountered
+    // move cursor before found element
+    // return cursor position if element is found
+    while(beforeCursor != frontDummy){
+        if(beforeCursor->data == x){
+            movePrev();
+            return pos_cursor;
+        }
+        movePrev();
+    }
+    // return -1 if x not found
+    return -1;
 }
 
 // cleanup()
@@ -321,21 +381,89 @@ int List::findPrev(ListElement x) {
 // is not moved with respect to the retained elements, i.e. it lies between 
 // the same two retained elements that it did before cleanup() was called.
 void List::cleanup() {
-    // TODO
+    // declare node pointer to reference elements
+    Node* N = frontDummy->next;
+    // iterate thru list examining current node until backDummy is encountered
+    while(N != backDummy){
+        // assign temp node to examine next node in line
+        Node* next = N->next;
+        // iterate thru list examining next node until backDummy is encountered
+        // if data from current and next node match, delete current node and relink nodes
+        // if no match, continue examining 
+        while(next != backDummy){
+            if(N->data == next->data){
+                Node* del = next;
+                next = next->next;
+                // adjust cursor if they point to node being delted
+                if (del == beforeCursor) {
+                    beforeCursor = beforeCursor->prev;
+                    pos_cursor--;
+                }
+                if (del == afterCursor) {
+                    afterCursor = afterCursor->next;
+                }
+                del->prev->next = del->next;
+                del->next->prev = del->prev;
+                // delete node
+                delete del;
+                // decrement num of elements in list
+                num_elements--;
+            }
+            else{
+                next = next->next;
+            }
+        }
+    N = N->next;
+    }
 }
  
 // concat()
 // Returns a new List consisting of the elements of this List, followed by
 // the elements of L. The cursor in the returned List will be at postion 0.
 List List::concat(const List& L) const {
-    // TODO
+    // create new empty list
+    List cat;
+    int total_l = L.length() + length();
+    // assign node for traversal
+    Node* N = frontDummy->next;
+    // iterate until backdummy is hit for the calling list
+    while(N != backDummy){
+        cat.insertAfter(N->data);
+        N = N->next;
+    }
+    // iterate until backdummy is hit for the argument list
+    Node* N2 = L.frontDummy->next;
+    while(N2 != L.backDummy){
+        cat.insertAfter(N2->data);
+        N2 = N2->next;
+    }
+    // move cursor in new list to front
+    cat.moveFront();
+    // return new list
+    return cat;
 }
 
 // to_string()
 // Returns a string representation of this List consisting of a comma 
 // separated sequence of elements, surrounded by parentheses.
 std::string List::to_string() const {
-    // TODO
+    // assign node for traversal
+    Node* N = frontDummy->next;
+    // declare string to hold output
+    std::string s = "(";
+    // iterate thru list until backdummy is hit
+    // add list element to output string
+    // keep printing separation commas as long as you are not at end of list
+    while(N != backDummy){
+        s += std::to_string(N->data);
+        if(N->next != backDummy){
+            s += ", ";
+        }
+        N = N->next;
+    }
+    s += ")";
+    // return final string
+    return s;
 }
 
 // equals()
