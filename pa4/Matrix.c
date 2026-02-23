@@ -139,7 +139,44 @@ int numNonZero(Matrix M){
 
 // equals()
 // Returns true if matrices A and B are equal, false otherwise.
-bool equals(Matrix A, Matrix B);
+bool equals(Matrix A, Matrix B){
+    // check for valid matrix
+    if(A == NULL || B == NULL){
+        fprintf(stderr, "NULL Matrix!\n");
+        exit(EXIT_FAILURE);
+    }
+    // check for equal dimension
+    if (dimension(A) != dimension(B)){
+        return false;
+    }
+    // check for equal nnz
+    if (numNonZero(A) != numNonZero(B)){
+        return false;
+    }
+    // iterate thru A & B and compare entries
+    for(int i = 1; i <= dimension(A); i++){
+        List row_A = A->rows[i];
+        List row_B = B->rows[i];
+        // go to front of each matrix's row
+        moveFront(row_A);
+        moveFront(row_B);
+        // iterate thru each row while cursor is valid
+        while(position(row_A) >= 0 && position(row_B) >= 0){
+            // assign entry pointer with an entry type cast
+            Entry E_A = (Entry)get(row_A);
+            Entry E_B = (Entry)get(row_B);
+            // check if columns and values are equal
+            if(E_A->col != E_B->col || E_A->val != E_B->val){
+                return false;
+            }
+            // move to next entry
+            moveNext(row_A);
+            moveNext(row_B);
+            }
+        }
+    // return new summed matrix
+    return true;
+}
 
 // Manipulation procedures ----------------------------------------------------
 
