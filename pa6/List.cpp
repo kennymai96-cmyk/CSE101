@@ -173,13 +173,21 @@ void List::clear() {
 // moveFront()
 // Moves cursor to position 0 in this List.
 void List::moveFront() {
-    // TODO
+    // move cursor to front
+    pos_cursor = 0;
+    // reset cursor
+    beforeCursor = frontDummy;
+    afterCursor = frontDummy->next;
 }
 
 // moveBack()
 // Moves cursor to position length() in this List.
 void List::moveBack() {
-    // TODO
+    // move cursor to back
+    pos_cursor = length();
+    // reset cursor
+    afterCursor = backDummy;
+    beforeCursor = backDummy->prev;
 }
 
 // moveNext()
@@ -187,7 +195,18 @@ void List::moveBack() {
 // was passed over. 
 // pre: position()<length() 
 ListElement List::moveNext() {
-    // TODO
+    // check if cursor is already at the back of list
+    if(position() >= length()){
+        throw std::length_error("Cursor at the back!");
+    }
+    // set element to next node
+    ListElement x = afterCursor->data;
+    beforeCursor = afterCursor;
+    afterCursor = afterCursor->next;
+    // move cursor to next node
+    pos_cursor++;
+    // return list element
+    return x;
 }
 
 // movePrev()
@@ -195,26 +214,60 @@ ListElement List::moveNext() {
 // was passed over. 
 // pre: position()>0
 ListElement List::movePrev() {
-    // TODO
+    // check if cursor is already at the front of list
+    if(position() <= 0){
+        throw std::length_error("Cursor at the front!");
+    }
+    // set element to prev node
+    ListElement x = beforeCursor->data;
+    afterCursor = beforeCursor;
+    beforeCursor = beforeCursor->prev;
+    // move cursor to prev node
+    pos_cursor--;
+    // return list element
+    return x;
 }
 
 // insertAfter()
 // Inserts x after cursor.
 void List::insertAfter(ListElement x) {
-    // TODO
+    // create new node and link its cursors
+    Node* N = new Node(x);
+    N->prev = beforeCursor;
+    N->next = afterCursor;
+    // reorient before/after cursors
+    beforeCursor->next = N;
+    afterCursor->prev = N;
+    afterCursor = N;
+    // increment num of elements in list
+    num_elements++;
 }
 
 // insertBefore()
 // Inserts x before cursor.
 void List::insertBefore(ListElement x) {
-    // TODO
+    // create new node and link its cursors
+    Node* N = new Node(x);
+    N->prev = beforeCursor;
+    N->next = afterCursor;
+    // reorient before/after cursors
+    beforeCursor->next = N;
+    afterCursor->prev = N;
+    beforeCursor = N;
+    // increment cursor
+    pos_cursor++;
+    // increment num of elements in list
+    num_elements++;
 }
 
 // setAfter()
 // Overwrites the List element after the cursor with x.
 // pre: position()<length()
 void List::setAfter(ListElement x) {
-    // TODO
+    // check if cursor is already at the back of list
+    if(position() >= length()){
+        throw std::length_error("Cursor at the back!");
+    }
 }
 
 // setBefore()
