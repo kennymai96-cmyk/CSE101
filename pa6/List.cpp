@@ -56,13 +56,13 @@ List::List(const List& L){
     // insert elements 
     while(N != L.backDummy){
         insertAfter(N->data);
-        moveNext;
+        moveNext();
         N = N->next;
     }
     // match new list's cursor to old list
     moveFront();
     for(int i = 0; i < L.pos_cursor; i++){
-        moveNext;
+        moveNext();
     }
 }
 
@@ -423,7 +423,6 @@ void List::cleanup() {
 List List::concat(const List& L) const {
     // create new empty list
     List cat;
-    int total_l = L.length() + length();
     // assign node for traversal
     Node* N = frontDummy->next;
     // iterate until backdummy is hit for the calling list
@@ -470,27 +469,56 @@ std::string List::to_string() const {
 // Returns true if and only if this List is the same integer sequence as R.
 // The cursors in this List and in R are unchanged.
 bool List::equals(const List& R) const {
-    // TODO
+    // check for equal lengths
+    if(length() != R.length()){
+        return false;
+    }
+    // assign temp nodes for traversal
+    Node* N = frontDummy->next;
+    Node* N2 = R.frontDummy->next;
+    // iterate thru each list until backdummy is hit
+    while(N != backDummy){
+        if(N->data != N2->data){
+            return false;
+        }
+        N = N->next;
+        N2 = N2->next;
+    }
+    // return true if loop completes successfully
+    return true;
 }
-
 
 // Overriden Operators -----------------------------------------------------
 
 // operator<<()
 // Inserts string representation of L into stream.
 std::ostream& operator<<( std::ostream& stream, const List& L ) {
-    // TODO
+    // assign node for traversal
+    return stream << L.to_string();
 }
 
 // operator==()
 // Returns true if and only if A is the same integer sequence as B. The 
 // cursors in both Lists are unchanged.
 bool operator==( const List& A, const List& B ) {
-    // TODO
+    return A.equals(B);
 }
 
 // operator=()
 // Overwrites the state of this List with state of L.
 List& List::operator=( const List& L ) {
-    // TODO
+    // check if both pointers are the same
+    // if not clear this list
+    // iterate thru list with temp node and insert contents into this list
+    if(this != &L){
+        this->clear();
+        Node* N = frontDummy->next;
+        while(N != backDummy){
+            this->insertAfter(N->data);
+            this->moveNext();
+            N = N->next;
+        }
+    }
+    // return list pointer
+    return *this;
 }
