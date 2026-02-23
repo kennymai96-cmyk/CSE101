@@ -1,0 +1,16 @@
+//-----------------------------------------------------------------------------
+// Kenny Mai
+// kemai
+// 2026 Winter CSE101 PA6
+// README.md
+// README file for List ADT
+//-----------------------------------------------------------------------------
+
+List.h - Header file for List ADT
+List.cpp  - Implementation file for List ADT
+ListTest.cpp - Self-created tests for LIST ADT functions
+Shuffle.cpp - Top-level file for List ADT
+Makefile - Makefile for LIST ADT
+
+AI Chat Log URLS
+List.cpp - https://chatgpt.com/c/699c7e36-93a0-8327-aac7-3a9a9813d1b9
