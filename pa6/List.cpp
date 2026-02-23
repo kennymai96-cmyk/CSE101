@@ -11,7 +11,7 @@
 #include <stdexcept>
 #include "List.h"
 
-// Constructors --------------------------------------------------------
+// Class Constructors & Destructors -----------------------------
 
 // Node constructor 
 List::Node::Node(ListElement x){
@@ -19,6 +19,7 @@ List::Node::Node(ListElement x){
     next = nullptr;
     prev = nullptr;
 }
+
 // List constructor
 List::List(){
     // define dummy nodes
@@ -30,6 +31,55 @@ List::List(){
     // init cursors 
     beforeCursor = frontDummy;
     afterCursor = backDummy;
+    // init list tracking vars
+    pos_cursor = 0;
+    num_elements = 0;
+}
+
+// Copy constructor
+List::List(const List& L){
+    // define dummy nodes
+    frontDummy = new Node(0);
+    backDummy = new Node(0);
+    // link dummies together
+    frontDummy->next = backDummy;
+    backDummy->prev = frontDummy;
+    // init cursors 
+    beforeCursor = frontDummy;
+    afterCursor = backDummy;
+    // init list tracking vars
+    pos_cursor = 0;
+    num_elements = 0;
+    // declare node pointer to reference elements
+    Node* N = L.frontDummy->next;
+    // iterate thru list until backDummy is encountered
+    // insert elements 
+    while(N != L.backDummy){
+        insertAfter(N->data);
+        moveNext;
+        N = N->next;
+    }
+    // match new list's cursor to old list
+    moveFront();
+    for(int i = 0; i < L.pos_cursor; i++){
+        moveNext;
+    }
+}
+
+// Destructor
+List::~List(){
+    // declare node pointer to reference elements
+    Node* N = frontDummy->next;
+    // iterate thru list until backDummy is encountered
+    // point to next node and delete current one
+    while(N != backDummy){
+        Node* next = N->next;
+        delete N;
+        N = next;
+    }
+    // delete dummies
+    delete frontDummy;
+    delete backDummy;
 }
 
 // Access functions --------------------------------------------------------
@@ -37,27 +87,38 @@ List::List(){
 // length()
 // Returns the length of this List.
 int List::length() const {
-    // TODO
+    // return number of elements
+    return num_elements;
 }
 
 // front()
 // Returns the front element in this List.
 // pre: length()>0
 ListElement List::front() const {
-    // TODO
+    if(length() <= 0){
+        throw std::length_error("Empty List!");
+    }
+    // can't use cursor because const stops modification
+    // return the first element
+    return frontDummy->next->data;
 }
 
 // back()
 // Returns the back element in this List.
 // pre: length()>0
 ListElement List::back() const {
-    // TODO
+    if(length() <= 0){
+        throw std::length_error("Empty List!");
+    }
+    // can't use cursor because const stops modification
+    // return the first element
+    return backDummy->prev->data;
 }
 
 // position()
 // Returns the position of cursor in this List: 0 <= position() <= length().
 int List::position() const {
-    // TODO
+    return pos_cursor;
 }
 
 // peekNext()
