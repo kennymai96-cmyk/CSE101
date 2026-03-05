@@ -1,0 +1,21 @@
+line 1 contains 4 tokens
+   One,
+   two
+   +
+   :)
+
+line 2 contains 1 token
+   two::One,,,three
+
+line 3 contains 1 token
+   three/two
+
+line 4 contains 1 token
+   Four
+
+line 5 contains 2 tokens
+   one,
+   five=three
+
+line 6 contains 0 tokens
+

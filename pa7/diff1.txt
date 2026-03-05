@@ -1,0 +1,30 @@
+--- outfile1.txt	2026-03-05 22:00:33.719791680 +0000
++++ ../cse-101-public-tests/pa7/model-outfile1.txt	2026-03-05 17:42:03.421010510 +0000
+@@ -1,21 +1,8 @@
+-line 1 contains 4 tokens
+-   One,
+-   two
+-   +
+-   :)
+-
+-line 2 contains 1 token
+-   two::One,,,three
++(3, 0, 5, 4, 2, 1)
+ 
+-line 3 contains 1 token
+-   three/two
+-
+-line 4 contains 1 token
+    Four
+-
+-line 5 contains 2 tokens
+-   one,
+-   five=three
+-
+-line 6 contains 0 tokens
+-
++One
++five
++one
++three
++two

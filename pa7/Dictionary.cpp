@@ -175,6 +175,15 @@ Dictionary::Node* Dictionary::findPrev(Node* N){
 
 // Class Constructors & Destructors ----------------------------------------
 
+// creates new Node
+Dictionary::Node::Node(keyType k, valType v){
+    key = k;
+    val = v;
+    parent = nullptr;
+    left = nullptr;
+    right = nullptr;
+}
+
 // Creates new Dictionary in the empty state. 
 Dictionary::Dictionary(){
     // sentinel node to represent missing children
