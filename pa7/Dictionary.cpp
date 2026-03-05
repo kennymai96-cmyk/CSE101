@@ -282,18 +282,137 @@ valType& Dictionary::currentVal() const{
 
 // clear()
 // Resets this Dictionary to the empty state, containing no pairs.
-void clear();
+void Dictionary::clear(){
+    postOrderDelete(root);
+    root = nil;
+    current = nil;
+    num_pairs = 0;
+}
 
 // setValue()
 // If a pair with key==k exists, overwrites the corresponding value with v, 
 // otherwise inserts the new pair (k, v).
-void setValue(keyType k, valType v);
+void Dictionary::setValue(keyType k, valType v){
+    // search BST for Node with value k
+    Node* N = search(root, k);
+    // if it exists, overwrite val
+    if(N != nil){
+        N->val = v;
+        return;
+    }
+    // init traversal pointers
+    Node* cur = root;
+    Node* par = nil;
+    // find insertion location
+    // step par down a level, and evaluate cur for traversal direction
+    while(cur != nil){
+        par = cur;
+        if(k < cur->key){
+            cur = cur->left;
+        }
+        else{
+            cur = cur->right;
+        }
+    }
+    // create new Node
+    Node* ins = new Node(k, v);
+    ins->parent = par;
+    ins->left = nil;
+    ins->right = nil;
+    // check if inserting into empty tree
+    if(par == nil){
+        root = ins;
+    }
+    // if non-empty check for insertion left or right
+    else if(k < par->key){
+        par->left = ins;
+    }
+    else{
+        par->right = ins;
+    }
+    // increment # of pairs
+    num_pairs++;
+}
 
 // remove()
 // Deletes the pair for which key==k. If that pair is current, then current
 // becomes undefined.
 // Pre: contains(k).
-void remove(keyType k);
+void Dictionary::remove(keyType k){
+    // search tree for Node with value k
+    Node* N = search(root, k);
+    if(N == nil){
+        throw std::logic_error("Node containing k not found!");
+    }
+    // check if current
+    if(current == N){
+        current = nil;
+    }
+    // check if leftmost
+    if(N->left == nil){
+        // check if root
+        if(N == root){
+            root = N->right;
+        }
+        // check if on the left 
+        else if(N == N->parent->left){
+            N->parent->left = N->right;
+        }
+        // else it is on the right
+        else {
+            N->parent->right = N->right;
+        }
+        // reconnect child of Node being deleted to parent of deleted
+        if(N->right != nil){
+            N->right->parent = N->parent;
+        }
+    }
+    // check if rightmost
+    else if(N->right == nil){
+        // check if root
+        if(N == root){
+            root = N->left;
+        }
+        // check if on the left 
+        else if(N == N->parent->left){
+            N->parent->left = N->left;
+        }
+        // else it is on the right 
+        else {
+            N->parent->right = N->left;
+        }
+        // reconnect child of Node being deleted to parent of deleted
+        if(N->left != nil){
+            N->left->parent = N->parent;
+        }
+    }
+    // check if in middle of BST
+    else{
+        // find successor and overwrite found Node with its info
+        Node* S = findMin(N->right);
+        N->key = S->key;
+        N->val = S->val;
+        // check if on the left
+        if(S == S->parent->left){
+            S->parent->left = S->right;
+        }
+        // else on the right 
+        else {
+            S->parent->right = S->right;
+        }
+        // reconnect child of Node being deleted to parent of deleted
+        if(S->right != nil){
+            S->right->parent = S->parent;
+        }
+        // delete successor and decrement # of pairs
+        delete S;
+        num_pairs--;
+        return;
+    }
+    // delete found Node and decerement # of pairs
+    delete N;
+    num_pairs--;
+}
 
 // begin()
 // If non-empty, places current iterator at the first (key, value) pair
@@ -401,8 +520,19 @@ bool operator==( const Dictionary& A, const Dictionary& B ){
 // operator=()
 // Overwrites the state of this Dictionary with state of D, and returns a
 // reference to this Dictionary.
-Dictionary& operator=( const Dictionary& D ){
-    // clear input Dictionary
+Dictionary& Dictionary::operator=( const Dictionary& D ){
+    // clear contents of input Dictionary
     clear();
-    
+    // make copy or arg Dictionary
+    Dictionary C = D;         
+    // navigate to root
+    Node* N = C.findMin(C.root);
+    // iterate until nil is hit
+    // insert from D into C
+    while(N != C.nil){
+        setValue(N->key, N->val);
+        N = C.findNext(N);
+    }
+    // return overwritten Dictionary
+    return *this;
 }
