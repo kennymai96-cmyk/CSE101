@@ -9,6 +9,7 @@
 #include<iostream>
 #include<fstream>
 #include<string>
+#include "Dictionary.h"
 
 using namespace std;
 
@@ -16,16 +17,16 @@ using namespace std;
 
 int main(int argc, char * argv[]){
 
-   int token_count, line_count;
    size_t begin, end, len;
    ifstream in;
    ofstream out;
    string line;
-   string tokenBuffer;
    string token;
-   string delim = " "; 
-   //string delim = " \t\\\"\',<.>/?;:[{]}|`~!@#$^&*()-_=+0123456789";
-
+   string delim = " \t\\\"\',<.>/?;:[{]}|`~!@#$^&*()-_=+0123456789\n\r\f\v";
+   // declare Dictionary
+   Dictionary D;
+   // declare to hold insertion index
+   int index = 0;
    // check command line for correct number of arguments
    if( argc != 3 ){
       cerr << "Usage: " << argv[0] << " <input file> <output file>" << endl;
@@ -44,39 +45,42 @@ int main(int argc, char * argv[]){
       cerr << "Unable to open file " << argv[2] << " for writing" << endl;
       return(EXIT_FAILURE);
    }
-
    // read each line of input file, then count and print tokens 
-   line_count = 0;
    while( getline(in, line) )  {
-      line_count++;
       len = line.length();
-      
-      // get tokens in this line
-      token_count = 0;
-      tokenBuffer = "";
-
       // get first token
       begin = min(line.find_first_not_of(delim, 0), len);
       end   = min(line.find_first_of(delim, begin), len);
       token = line.substr(begin, end-begin);
-      
-      while( token!="" ){  // we have a token
-         // update token buffer
-         tokenBuffer += "   "+token+"\n";
-         token_count++;
-
+      // while we have a token
+      while( token!="" ){ 
+         // insert if not in Dictionary and increment insertion index
+         if(!D.contains(token)){
+            D.setValue(token, index);
+            index++;
+         }
          // get next token
          begin = min(line.find_first_not_of(delim, end+1), len);
          end   = min(line.find_first_of(delim, begin), len);
          token = line.substr(begin, end-begin);
       }
-
-      // print tokens in this line
-      out << "line " << line_count << " contains " << token_count;
-      out << " token" << (token_count==1?"":"s") << endl;
-      out << tokenBuffer << endl;
    }
-
+   // 
+   out << "(";
+   // goto begin of Dictionary
+   D.begin();
+   // iterate while iterator is not at last pair
+   while(D.hasCurrent()){
+      out << D.currentVal();
+      D.next();
+      if(D.hasCurrent()){
+         out << ", ";
+      }
+   }
+   out << ")" << endl;
+   for(D.begin(); D.hasCurrent(); D.next()){
+      out << D.currentKey() << endl;
+   }
    // close files 
    in.close();
    out.close();

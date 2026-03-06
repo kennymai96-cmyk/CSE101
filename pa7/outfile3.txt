@@ -1,1400 +1,421 @@
-line 1 contains 2 tokens
-   CHAPTER
-   XIV
-
-line 2 contains 1 token
-   
-
-line 3 contains 1 token
-   
-
-line 4 contains 12 tokens
-   On
-   November
-   1
-   Kutuzov
-   had
-   received,
-   through
-   a
-   spy,
-   news
-   that
-   the
-
-line 5 contains 12 tokens
-   army
-   he
-   commanded
-   was
-   in
-   an
-   almost
-   hopeless
-   position.
-   The
-   spy
-   reported
-
-line 6 contains 11 tokens
-   that
-   the
-   French,
-   after
-   crossing
-   the
-   bridge
-   at
-   Vienna,
-   were
-   advancing
-
-line 7 contains 10 tokens
-   in
-   immense
-   force
-   upon
-   Kutuzov's
-   line
-   of
-   communication
-   with
-   the
-
-line 8 contains 12 tokens
-   troops
-   that
-   were
-   arriving
-   from
-   Russia.
-   If
-   Kutuzov
-   decided
-   to
-   remain
-   at
-
-line 9 contains 12 tokens
-   Krems,
-   Napoleon's
-   army
-   of
-   one
-   hundred
-   and
-   fifty
-   thousand
-   men
-   would
-   cut
-
-line 10 contains 10 tokens
-   him
-   off
-   completely
-   and
-   surround
-   his
-   exhausted
-   army
-   of
-   forty
-
-line 11 contains 14 tokens
-   thousand,
-   and
-   he
-   would
-   find
-   himself
-   in
-   the
-   position
-   of
-   Mack
-   at
-   Ulm.
-   If
-
-line 12 contains 11 tokens
-   Kutuzov
-   decided
-   to
-   abandon
-   the
-   road
-   connecting
-   him
-   with
-   the
-   troops
-
-line 13 contains 13 tokens
-   arriving
-   from
-   Russia,
-   he
-   would
-   have
-   to
-   march
-   with
-   no
-   road
-   into
-   unknown
-
-line 14 contains 9 tokens
-   parts
-   of
-   the
-   Bohemian
-   mountains,
-   defending
-   himself
-   against
-   superior
-
-line 15 contains 12 tokens
-   forces
-   of
-   the
-   enemy
-   and
-   abandoning
-   all
-   hope
-   of
-   a
-   junction
-   with
-
-line 16 contains 11 tokens
-   Buxhowden.
-   If
-   Kutuzov
-   decided
-   to
-   retreat
-   along
-   the
-   road
-   from
-   Krems
-
-line 17 contains 12 tokens
-   to
-   Olmutz,
-   to
-   unite
-   with
-   the
-   troops
-   arriving
-   from
-   Russia,
-   he
-   risked
-
-line 18 contains 12 tokens
-   being
-   forestalled
-   on
-   that
-   road
-   by
-   the
-   French
-   who
-   had
-   crossed
-   the
-
-line 19 contains 10 tokens
-   Vienna
-   bridge,
-   and
-   encumbered
-   by
-   his
-   baggage
-   and
-   transport,
-   having
-
-line 20 contains 12 tokens
-   to
-   accept
-   battle
-   on
-   the
-   march
-   against
-   an
-   enemy
-   three
-   times
-   as
-
-line 21 contains 9 tokens
-   strong,
-   who
-   would
-   hem
-   him
-   in
-   from
-   two
-   sides.
-
-line 22 contains 1 token
-   
-
-line 23 contains 5 tokens
-   Kutuzov
-   chose
-   this
-   latter
-   course.
-
-line 24 contains 1 token
-   
-
-line 25 contains 11 tokens
-   The
-   French,
-   the
-   spy
-   reported,
-   having
-   crossed
-   the
-   Vienna
-   bridge,
-   were
-
-line 26 contains 10 tokens
-   advancing
-   by
-   forced
-   marches
-   toward
-   Znaim,
-   which
-   lay
-   sixty-six
-   miles
-
-line 27 contains 13 tokens
-   off
-   on
-   the
-   line
-   of
-   Kutuzov's
-   retreat.
-   If
-   he
-   reached
-   Znaim
-   before
-   the
-
-line 28 contains 13 tokens
-   French,
-   there
-   would
-   be
-   great
-   hope
-   of
-   saving
-   the
-   army;
-   to
-   let
-   the
-
-line 29 contains 12 tokens
-   French
-   forestall
-   him
-   at
-   Znaim
-   meant
-   the
-   exposure
-   of
-   his
-   whole
-   army
-
-line 30 contains 14 tokens
-   to
-   a
-   disgrace
-   such
-   as
-   that
-   of
-   Ulm,
-   or
-   to
-   utter
-   destruction.
-   But
-   to
-
-line 31 contains 11 tokens
-   forestall
-   the
-   French
-   with
-   his
-   whole
-   army
-   was
-   impossible.
-   The
-   road
-
-line 32 contains 13 tokens
-   for
-   the
-   French
-   from
-   Vienna
-   to
-   Znaim
-   was
-   shorter
-   and
-   better
-   than
-   the
-
-line 33 contains 8 tokens
-   road
-   for
-   the
-   Russians
-   from
-   Krems
-   to
-   Znaim.
-
-line 34 contains 1 token
-   
-
-line 35 contains 10 tokens
-   The
-   night
-   he
-   received
-   the
-   news,
-   Kutuzov
-   sent
-   Bagration's
-   vanguard,
-
-line 36 contains 11 tokens
-   four
-   thousand
-   strong,
-   to
-   the
-   right
-   across
-   the
-   hills
-   from
-   the
-
-line 37 contains 11 tokens
-   Krems-Znaim
-   to
-   the
-   Vienna-Znaim
-   road.
-   Bagration
-   was
-   to
-   make
-   this
-   march
-
-line 38 contains 13 tokens
-   without
-   resting,
-   and
-   to
-   halt
-   facing
-   Vienna
-   with
-   Znaim
-   to
-   his
-   rear,
-   and
-
-line 39 contains 13 tokens
-   if
-   he
-   succeeded
-   in
-   forestalling
-   the
-   French
-   he
-   was
-   to
-   delay
-   them
-   as
-
-line 40 contains 12 tokens
-   long
-   as
-   possible.
-   Kutuzov
-   himself
-   with
-   all
-   his
-   transport
-   took
-   the
-   road
-
-line 41 contains 2 tokens
-   to
-   Znaim.
-
-line 42 contains 1 token
-   
-
-line 43 contains 9 tokens
-   Marching
-   thirty
-   miles
-   that
-   stormy
-   night
-   across
-   roadless
-   hills,
-
-line 44 contains 13 tokens
-   with
-   his
-   hungry,
-   ill-shod
-   soldiers,
-   and
-   losing
-   a
-   third
-   of
-   his
-   men
-   as
-
-line 45 contains 11 tokens
-   stragglers
-   by
-   the
-   way,
-   Bagration
-   came
-   out
-   on
-   the
-   Vienna-Znaim
-   road
-
-line 46 contains 12 tokens
-   at
-   Hollabrunn
-   a
-   few
-   hours
-   ahead
-   of
-   the
-   French
-   who
-   were
-   approaching
-
-line 47 contains 10 tokens
-   Hollabrunn
-   from
-   Vienna.
-   Kutuzov
-   with
-   his
-   transport
-   had
-   still
-   to
-
-line 48 contains 11 tokens
-   march
-   for
-   some
-   days
-   before
-   he
-   could
-   reach
-   Znaim.
-   Hence
-   Bagration
-
-line 49 contains 11 tokens
-   with
-   his
-   four
-   thousand
-   hungry,
-   exhausted
-   men
-   would
-   have
-   to
-   detain
-
-line 50 contains 12 tokens
-   for
-   days
-   the
-   whole
-   enemy
-   army
-   that
-   came
-   upon
-   him
-   at
-   Hollabrunn,
-
-line 51 contains 11 tokens
-   which
-   was
-   clearly
-   impossible.
-   But
-   a
-   freak
-   of
-   fate
-   made
-   the
-
-line 52 contains 11 tokens
-   impossible
-   possible.
-   The
-   success
-   of
-   the
-   trick
-   that
-   had
-   placed
-   the
-
-line 53 contains 1 token
-   
-
-line 54 contains 13 tokens
-   Vienna
-   bridge
-   in
-   the
-   hands
-   of
-   the
-   French
-   without
-   a
-   fight
-   led
-   Murat
-
-line 55 contains 12 tokens
-   to
-   try
-   to
-   deceive
-   Kutuzov
-   in
-   a
-   similar
-   way.
-   Meeting
-   Bagration's
-   weak
-
-line 56 contains 12 tokens
-   detachment
-   on
-   the
-   Znaim
-   road
-   he
-   supposed
-   it
-   to
-   be
-   Kutuzov's
-   whole
-
-line 57 contains 13 tokens
-   army.
-   To
-   be
-   able
-   to
-   crush
-   it
-   absolutely
-   he
-   awaited
-   the
-   arrival
-   of
-
-line 58 contains 14 tokens
-   the
-   rest
-   of
-   the
-   troops
-   who
-   were
-   on
-   their
-   way
-   from
-   Vienna,
-   and
-   with
-
-line 59 contains 11 tokens
-   this
-   object
-   offered
-   a
-   three
-   days'
-   truce
-   on
-   condition
-   that
-   both
-
-line 60 contains 10 tokens
-   armies
-   should
-   remain
-   in
-   position
-   without
-   moving.
-   Murat
-   declared
-   that
-
-line 61 contains 9 tokens
-   negotiations
-   for
-   peace
-   were
-   already
-   proceeding,
-   and
-   that
-   he
-
-line 62 contains 9 tokens
-   therefore
-   offered
-   this
-   truce
-   to
-   avoid
-   unnecessary
-   bloodshed.
-   Count
-
-line 63 contains 9 tokens
-   Nostitz,
-   the
-   Austrian
-   general
-   occupying
-   the
-   advanced
-   posts,
-   believed
-
-line 64 contains 8 tokens
-   Murat's
-   emissary
-   and
-   retired,
-   leaving
-   Bagration's
-   division
-   exposed.
-
-line 65 contains 11 tokens
-   Another
-   emissary
-   rode
-   to
-   the
-   Russian
-   line
-   to
-   announce
-   the
-   peace
-
-line 66 contains 11 tokens
-   negotiations
-   and
-   to
-   offer
-   the
-   Russian
-   army
-   the
-   three
-   days'
-   truce.
-
-line 67 contains 11 tokens
-   Bagration
-   replied
-   that
-   he
-   was
-   not
-   authorized
-   either
-   to
-   accept
-   or
-
-line 68 contains 14 tokens
-   refuse
-   a
-   truce
-   and
-   sent
-   his
-   adjutant
-   to
-   Kutuzov
-   to
-   report
-   the
-   offer
-   he
-
-line 69 contains 2 tokens
-   had
-   received.
-
-line 70 contains 1 token
-   
-
-line 71 contains 10 tokens
-   A
-   truce
-   was
-   Kutuzov's
-   sole
-   chance
-   of
-   gaining
-   time,
-   giving
-
-line 72 contains 9 tokens
-   Bagration's
-   exhausted
-   troops
-   some
-   rest,
-   and
-   letting
-   the
-   transport
-
-line 73 contains 10 tokens
-   and
-   heavy
-   convoys
-   (whose
-   movements
-   were
-   concealed
-   from
-   the
-   French)
-
-line 74 contains 14 tokens
-   advance
-   if
-   but
-   one
-   stage
-   nearer
-   Znaim.
-   The
-   offer
-   of
-   a
-   truce
-   gave
-   the
-
-line 75 contains 11 tokens
-   only,
-   and
-   a
-   quite
-   unexpected,
-   chance
-   of
-   saving
-   the
-   army.
-   On
-
-line 76 contains 8 tokens
-   receiving
-   the
-   news
-   he
-   immediately
-   dispatched
-   Adjutant
-   General
-
-line 77 contains 11 tokens
-   Wintzingerode,
-   who
-   was
-   in
-   attendance
-   on
-   him,
-   to
-   the
-   enemy
-   camp.
-
-line 78 contains 13 tokens
-   Wintzingerode
-   was
-   not
-   merely
-   to
-   agree
-   to
-   the
-   truce
-   but
-   also
-   to
-   offer
-
-line 79 contains 10 tokens
-   terms
-   of
-   capitulation,
-   and
-   meanwhile
-   Kutuzov
-   sent
-   his
-   adjutants
-   back
-
-line 80 contains 13 tokens
-   to
-   hasten
-   to
-   the
-   utmost
-   the
-   movements
-   of
-   the
-   baggage
-   trains
-   of
-   the
-
-line 81 contains 9 tokens
-   entire
-   army
-   along
-   the
-   Krems-Znaim
-   road.
-   Bagration's
-   exhausted
-   and
-
-line 82 contains 9 tokens
-   hungry
-   detachment,
-   which
-   alone
-   covered
-   this
-   movement
-   of
-   the
-
-line 83 contains 13 tokens
-   transport
-   and
-   of
-   the
-   whole
-   army,
-   had
-   to
-   remain
-   stationary
-   in
-   face
-   of
-
-line 84 contains 8 tokens
-   an
-   enemy
-   eight
-   times
-   as
-   strong
-   as
-   itself.
-
-line 85 contains 1 token
-   
-
-line 86 contains 8 tokens
-   Kutuzov's
-   expectations
-   that
-   the
-   proposals
-   of
-   capitulation
-   (which
-
-line 87 contains 14 tokens
-   were
-   in
-   no
-   way
-   binding)
-   might
-   give
-   time
-   for
-   part
-   of
-   the
-   transport
-   to
-
-line 88 contains 11 tokens
-   pass,
-   and
-   also
-   that
-   Murat's
-   mistake
-   would
-   very
-   soon
-   be
-   discovered,
-
-line 89 contains 11 tokens
-   proved
-   correct.
-   As
-   soon
-   as
-   Bonaparte
-   (who
-   was
-   at
-   Schonbrunn,
-   sixteen
-
-line 90 contains 9 tokens
-   miles
-   from
-   Hollabrunn)
-   received
-   Murat's
-   dispatch
-   with
-   the
-   proposal
-
-line 91 contains 13 tokens
-   of
-   a
-   truce
-   and
-   a
-   capitulation,
-   he
-   detected
-   a
-   ruse
-   and
-   wrote
-   the
-
-line 92 contains 4 tokens
-   following
-   letter
-   to
-   Murat:
-
-line 93 contains 1 token
-   
-
-line 94 contains 1 token
-   
-
-line 95 contains 4 tokens
-   Schonbrunn,
-   25th
-   Brumaire,
-   1805,
-
-line 96 contains 1 token
-   
-
-line 97 contains 6 tokens
-   at
-   eight
-   o'clock
-   in
-   the
-   morning
-
-line 98 contains 1 token
-   
-
-line 99 contains 3 tokens
-   To
-   PRINCE
-   MURAT,
-
-line 100 contains 1 token
-   
-
-line 101 contains 12 tokens
-   I
-   cannot
-   find
-   words
-   to
-   express
-   to
-   you
-   my
-   displeasure.
-   You
-   command
-
-line 102 contains 12 tokens
-   only
-   my
-   advance
-   guard,
-   and
-   have
-   no
-   right
-   to
-   arrange
-   an
-   armistice
-
-line 103 contains 14 tokens
-   without
-   my
-   order.
-   You
-   are
-   causing
-   me
-   to
-   lose
-   the
-   fruits
-   of
-   a
-   campaign.
-
-line 104 contains 11 tokens
-   Break
-   the
-   armistice
-   immediately
-   and
-   march
-   on
-   the
-   enemy.
-   Inform
-   him
-
-line 105 contains 13 tokens
-   that
-   the
-   general
-   who
-   signed
-   that
-   capitulation
-   had
-   no
-   right
-   to
-   do
-   so,
-
-line 106 contains 12 tokens
-   and
-   that
-   no
-   one
-   but
-   the
-   Emperor
-   of
-   Russia
-   has
-   that
-   right.
-
-line 107 contains 1 token
-   
-
-line 108 contains 10 tokens
-   If,
-   however,
-   the
-   Emperor
-   of
-   Russia
-   ratifies
-   that
-   convention,
-   I
-
-line 109 contains 13 tokens
-   will
-   ratify
-   it;
-   but
-   it
-   is
-   only
-   a
-   trick.
-   March
-   on,
-   destroy
-   the
-
-line 110 contains 12 tokens
-   Russian
-   army....
-   You
-   are
-   in
-   a
-   position
-   to
-   seize
-   its
-   baggage
-   and
-
-line 111 contains 1 token
-   artillery.
-
-line 112 contains 1 token
-   
-
-line 113 contains 9 tokens
-   The
-   Russian
-   Emperor's
-   aide-de-camp
-   is
-   an
-   impostor.
-   Officers
-   are
-
-line 114 contains 11 tokens
-   nothing
-   when
-   they
-   have
-   no
-   powers;
-   this
-   one
-   had
-   none....
-   The
-
-line 115 contains 11 tokens
-   Austrians
-   let
-   themselves
-   be
-   tricked
-   at
-   the
-   crossing
-   of
-   the
-   Vienna
-
-line 116 contains 11 tokens
-   bridge,
-   you
-   are
-   letting
-   yourself
-   be
-   tricked
-   by
-   an
-   aide-de-camp
-   of
-
-line 117 contains 2 tokens
-   the
-   Emperor.
-
-line 118 contains 1 token
-   
-
-line 119 contains 1 token
-   NAPOLEON
-
-line 120 contains 1 token
-   
-
-line 121 contains 1 token
-   
-
-line 122 contains 10 tokens
-   Bonaparte's
-   adjutant
-   rode
-   full
-   gallop
-   with
-   this
-   menacing
-   letter
-   to
-
-line 123 contains 11 tokens
-   Murat.
-   Bonaparte
-   himself,
-   not
-   trusting
-   to
-   his
-   generals,
-   moved
-   with
-   all
-
-line 124 contains 13 tokens
-   the
-   Guards
-   to
-   the
-   field
-   of
-   battle,
-   afraid
-   of
-   letting
-   a
-   ready
-   victim
-
-line 125 contains 9 tokens
-   escape,
-   and
-   Bagration's
-   four
-   thousand
-   men
-   merrily
-   lighted
-   campfires,
-
-line 126 contains 10 tokens
-   dried
-   and
-   warmed
-   themselves,
-   cooked
-   their
-   porridge
-   for
-   the
-   first
-
-line 127 contains 14 tokens
-   time
-   for
-   three
-   days,
-   and
-   not
-   one
-   of
-   them
-   knew
-   or
-   imagined
-   what
-   was
-
-line 128 contains 4 tokens
-   in
-   store
-   for
-   him.
-
+(267, 290, 255, 327, 244, 391, 152, 78, 328, 364, 339, 143, 89, 0, 242, 369, 24, 291, 402, 196, 186, 345, 44, 365, 48, 4, 344, 67, 377, 172, 212, 208, 395, 49, 243, 3, 385, 92, 2, 343, 43, 257, 149, 329, 22, 217, 68, 29, 292, 1, 352, 121, 8, 69, 85, 218, 220, 105, 156, 265, 301, 279, 247, 31, 404, 25, 81, 296, 189, 382, 86, 19, 307, 91, 236, 297, 18, 52, 258, 190, 358, 230, 356, 13, 355, 222, 41, 381, 109, 28, 293, 262, 239, 221, 302, 102, 106, 130, 128, 95, 249, 147, 316, 241, 229, 27, 280, 98, 184, 294, 363, 410, 346, 299, 359, 269, 114, 198, 341, 353, 15, 38, 60, 278, 228, 71, 373, 275, 413, 326, 194, 117, 308, 100, 26, 219, 57, 193, 383, 210, 45, 233, 80, 167, 378, 142, 214, 197, 333, 324, 138, 331, 289, 351, 253, 367, 411, 312, 263, 250, 101, 84, 306, 407, 63, 314, 254, 136, 348, 311, 162, 200, 187, 403, 53, 206, 65, 415, 336, 145, 33, 118, 83, 134, 96, 166, 64, 154, 199, 42, 362, 396, 270, 397, 283, 245, 400, 318, 272, 131, 354, 5, 161, 205, 370, 303, 72, 104, 14, 274, 111, 157, 58, 66, 62, 87, 20, 188, 371, 51, 176, 164, 177, 417, 288, 32, 144, 384, 17, 75, 376, 216, 380, 313, 88, 416, 116, 123, 252, 207, 133, 337, 273, 409, 36, 169, 361, 180, 201, 158, 73, 119, 360, 135, 300, 55, 398, 295, 408, 317, 126, 321, 342, 79, 401, 309, 277, 232, 350, 282, 234, 10, 150, 74, 390, 261, 386, 340, 225, 246, 37, 59, 259, 226, 97, 50, 284, 140, 357, 185, 319, 77, 320, 235, 204, 414, 21, 170, 248, 389, 237, 332, 315, 325, 285, 372, 375, 195, 127, 405, 163, 6, 287, 264, 47, 260, 266, 23, 223, 160, 251, 90, 155, 94, 70, 175, 256, 334, 35, 132, 379, 151, 178, 146, 231, 113, 366, 211, 125, 330, 124, 368, 179, 268, 192, 323, 9, 281, 310, 191, 419, 174, 182, 110, 165, 202, 139, 82, 215, 61, 298, 338, 148, 11, 12, 224, 168, 392, 129, 238, 388, 181, 173, 115, 54, 107, 7, 271, 108, 46, 171, 120, 305, 103, 203, 393, 40, 227, 399, 209, 112, 286, 93, 76, 240, 34, 304, 141, 153, 322, 406, 412, 16, 183, 213, 30, 418, 387, 122, 99, 137, 276, 374, 39, 159, 347, 56, 335, 349, 394)
+A
+Adjutant
+Another
+As
+Austrian
+Austrians
+Bagration
+Bohemian
+Bonaparte
+Break
+Brumaire
+But
+Buxhowden
+CHAPTER
+Count
+Emperor
+French
+General
+Guards
+Hence
+Hollabrunn
+I
+If
+Inform
+Krems
+Kutuzov
+MURAT
+Mack
+March
+Marching
+Meeting
+Murat
+NAPOLEON
+Napoleon
+Nostitz
+November
+Officers
+Olmutz
+On
+PRINCE
+Russia
+Russian
+Russians
+Schonbrunn
+The
+To
+Ulm
+Vienna
+Wintzingerode
+XIV
+You
+Znaim
+a
+abandon
+abandoning
+able
+absolutely
+accept
+across
+adjutant
+adjutants
+advance
+advanced
+advancing
+afraid
+after
+against
+agree
+ahead
+aide
+all
+almost
+alone
+along
+already
+also
+an
+and
+announce
+approaching
+are
+armies
+armistice
+army
+arrange
+arrival
+arriving
+artillery
+as
+at
+attendance
+authorized
+avoid
+awaited
+back
+baggage
+battle
+be
+before
+being
+believed
+better
+binding
+bloodshed
+both
+bridge
+but
+by
+came
+camp
+campaign
+campfires
+cannot
+capitulation
+causing
+chance
+chose
+clearly
+clock
+command
+commanded
+communication
+completely
+concealed
+condition
+connecting
+convention
+convoys
+cooked
+correct
+could
+course
+covered
+crossed
+crossing
+crush
+cut
+days
+de
+deceive
+decided
+declared
+defending
+delay
+destroy
+destruction
+detachment
+detain
+detected
+discovered
+disgrace
+dispatch
+dispatched
+displeasure
+division
+do
+dried
+eight
+either
+emissary
+encumbered
+enemy
+entire
+escape
+exhausted
+expectations
+exposed
+exposure
+express
+face
+facing
+fate
+few
+field
+fifty
+fight
+find
+first
+following
+for
+force
+forced
+forces
+forestall
+forestalled
+forestalling
+forty
+four
+freak
+from
+fruits
+full
+gaining
+gallop
+gave
+general
+generals
+give
+giving
+great
+guard
+had
+halt
+hands
+has
+hasten
+have
+having
+he
+heavy
+hem
+hills
+him
+himself
+his
+hope
+hopeless
+hours
+however
+hundred
+hungry
+if
+ill
+imagined
+immediately
+immense
+impossible
+impostor
+in
+into
+is
+it
+its
+itself
+junction
+knew
+latter
+lay
+leaving
+led
+let
+letter
+letting
+lighted
+line
+long
+lose
+losing
+made
+make
+march
+marches
+me
+meant
+meanwhile
+men
+menacing
+merely
+merrily
+might
+miles
+mistake
+morning
+mountains
+moved
+movement
+movements
+moving
+my
+nearer
+negotiations
+news
+night
+no
+none
+not
+nothing
+o
+object
+occupying
+of
+off
+offer
+offered
+on
+one
+only
+or
+order
+out
+part
+parts
+pass
+peace
+placed
+porridge
+position
+possible
+posts
+powers
+proceeding
+proposal
+proposals
+proved
+quite
+ratifies
+ratify
+reach
+reached
+ready
+rear
+received
+receiving
+refuse
+remain
+replied
+report
+reported
+rest
+resting
+retired
+retreat
+right
+risked
+road
+roadless
+rode
+ruse
+s
+saving
+seize
+sent
+shod
+shorter
+should
+sides
+signed
+similar
+six
+sixteen
+sixty
+so
+soldiers
+sole
+some
+soon
+spy
+stage
+stationary
+still
+store
+stormy
+stragglers
+strong
+succeeded
+success
+such
+superior
+supposed
+surround
+terms
+th
+than
+that
+the
+their
+them
+themselves
+there
+therefore
+they
+third
+thirty
+this
+thousand
+three
+through
+time
+times
+to
+took
+toward
+trains
+transport
+trick
+tricked
+troops
+truce
+trusting
+try
+two
+unexpected
+unite
+unknown
+unnecessary
+upon
+utmost
+utter
+vanguard
+very
+victim
+warmed
+was
+way
+weak
+were
+what
+when
+which
+who
+whole
+whose
+will
+with
+without
+words
+would
+wrote
+you
+yourself
