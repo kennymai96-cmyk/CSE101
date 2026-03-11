@@ -1,0 +1,16 @@
+//-----------------------------------------------------------------------------
+// Kenny Mai
+// kemai
+// 2026 Winter CSE101 PA8
+// README.md
+// README file for Dictionary ADT
+//-----------------------------------------------------------------------------
+
+Dictionary.h - Header file for Dictionary ADT
+Dictionary.cpp  - Implementation file for Dictionary ADT
+DictionaryTest.cpp - Self-created tests for Dictionary ADT functions
+Words.cpp - Top-level file for Dictionary ADT
+Makefile - Makefile for Dictionary ADT
+
+AI Chat Log URLS
+Dictionary.cpp - 
