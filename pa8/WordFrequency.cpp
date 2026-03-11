@@ -31,39 +31,37 @@ int main(int argc, char *argv[]) {  // check for valid amount of inputs: input f
     Dictionary D;
     // declare string to hold inputted line
     string line;
+    // delimiter characters 
+    string delim = " \t\n\r\\\"\',<.>/?;:[{]}|`~!@#$%^&*()-_=+0123456789";
+    size_t begin, end, len;
     while (getline(in, line)) {  // read text from input file
-        int w = 0;               // define index to store valid char in word
-        char word[256];          // set size of each word, assumes size < 255 including termination
-        for (int i = 0; i < line.length(); i++) { // iterate thru each char in line
-            if (isalpha((unsigned char)line[i])) {  // check for alpha char
-                word[w++] = tolower(line[i]);       // store char into word
+        len = line.length();
+        // find first token
+        begin = min(line.find_first_not_of(delim, 0), len);
+        end   = min(line.find_first_of(delim, begin), len);
+        string token = line.substr(begin, end - begin);
+        // iterate through all tokens in this line
+        while (token != "") {
+            // convert token to lowercase
+            for (size_t i = 0; i < token.length(); i++) {
+                token[i] = tolower(token[i]);
             }
-            else if (w > 0) {  // terminate word if non-alpha encountered
-                word[w] = '\0';  // terminate
-                w = 0;           // reset word index
-                string key = word;
-                if (D.contains(key)) {  // if pair found, increment count
-                    D.getValue(key)++;
-                }
-                else {                  // if not found set count to 1
-                    D.setValue(key, 1);
-                }
-            }
-        }
-        // handle case of last word in line
-        if (w > 0) {
-            word[w] = '\0';
-            string key = word;
-            if (D.contains(key)) {
-                D.getValue(key)++;
+            // check if token already exists
+            if (D.contains(token)) {
+                D.getValue(token)++;   // increment frequency
             }
             else {
-                D.setValue(key, 1);
+                D.setValue(token, 1);  // insert new word
             }
+            // find next token
+            begin = min(line.find_first_not_of(delim, end + 1), len);
+            end   = min(line.find_first_of(delim, begin), len);
+            token = line.substr(begin, end - begin);
         }
     }
     out << D;     // print dictionary
     in.close();   // close input file
     out.close();  // close output file
+
     return 0;
 }
