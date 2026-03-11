@@ -843,17 +843,9 @@ bool operator==( const Dictionary& A, const Dictionary& B ){
 // Overwrites the state of this Dictionary with state of D, and returns a
 // reference to this Dictionary.
 Dictionary& Dictionary::operator=( const Dictionary& D ){
-    // clear contents of input Dictionary
-    clear();
-    // make copy or arg Dictionary
-    Dictionary C = D;         
-    // navigate to root
-    Node* N = C.findMin(C.root);
-    // iterate until nil is hit
-    // insert from D into C
-    while(N != C.nil){
-        setValue(N->key, N->val);
-        N = C.findNext(N);
+    if(this != &D){
+        clear();
+        preOrderCopy(D.root, D.nil);
     }
     // return overwritten Dictionary
     return *this;
