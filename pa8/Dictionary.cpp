@@ -30,14 +30,63 @@ void Dictionary::inOrderString(std::string& s, Node* R) const{
 
 // preOrderString()
 // Appends a string representation of the tree rooted at R to s. The appended
-// string consists of keys only, separated by "\n", with the order determined
-// by a pre-order tree walk.
+// string will consist of keys only, with the order determined by a pre-order
+// tree walk. The keys stored in black Nodes will be appended as "key\n", and
+// the keys stored in red Nodes will be appended as "key (RED)\n". The output 
+// of this function is demonstrated in /Examples/pa8/DictionaryClient-out. 
 void Dictionary::preOrderString(std::string& s, Node* R) const{
     if(R != nil){
-        s += R->key + "\n";
+        // check if arg Node R is RED
+        if(R->color == RED){
+            s += R->key + " (RED)\n";
+        }
+        // if arg Node R is BLACK
+        else{
+            s += R->key + "\n";
+        }
         preOrderString(s, R->left);
         preOrderString(s, R->right);
     }
+}
+
+   // BST_insert()
+   // Inserts a copy of the Node *M into this Dictionary. Used by preOrderCopy().
+void Dictionary::BST_insert(Node* M){
+    // define y as nil
+    Node* y = nil;
+    // set x to root
+    Node* x = root;
+    // traverse tree while x is not nil
+    while(x != nil){
+        y = x;
+        // check for direction in tree traversal
+        // move left if smaller, move right if larger
+        if(M->key < x->key){
+            x = x->left;
+        }
+        // otherwise move right
+        else{
+            x = x->right;
+        }
+    }
+    // set parent of inserted Node
+    M->parent = y;
+    // check if tree was empty
+    // if so, inserted Node becomes root
+    if(y == nil){
+        root = M;
+    }
+    // check if on left subtree
+    else if(M->key < y->key){
+        y->left = M;
+    }
+    // check if in right subtree
+    else{
+        y->right = M;
+    }
+    // set children of inserted Node as nil
+    M->left = nil;
+    M->right = nil;
 }
 
 // preOrderCopy()
@@ -46,7 +95,10 @@ void Dictionary::preOrderString(std::string& s, Node* R) const{
 void Dictionary::preOrderCopy(Node* R, Node* N){
     // iterate until nil is hit, recursively call for left/right subtrees
     if(R != N){
-        setValue(R->key, R->val);
+        Node* M = new Node(R->key, R->val);
+        M->color = R->color;
+        BST_insert(M);
+        num_pairs++;
         preOrderCopy(R->left, N);
         preOrderCopy(R->right, N);
     }
@@ -338,11 +390,155 @@ void Dictionary::RB_Transplant(Node* u, Node* v){
 
 // RB_DeleteFixUp()
 void Dictionary::RB_DeleteFixUp(Node* N){
-    
+    // check if arg Node is not the root, and if it is BLACK
+    while(N != root && N->color == BLACK){
+        // check if N is left child
+        // if so, grab sibling Node
+        if(N == N->parent->left){
+            Node* S = N->parent->right;
+            // check if sibling is RED
+            // if so, recolor sibling and parent
+            // left rotate parent to maintain structure
+            // reconnect parent's old right child to arg Node N
+            if(S->color == RED){
+                S->color = BLACK;
+                N->parent->color = RED;
+                LeftRotate(N->parent);
+                S = N->parent->right;
+            }
+            // check if sibling is black and both children are black
+            // if so, recolor red and move arg Node N up a level to continue fixing
+            if(S->color == BLACK && S->left->color == BLACK && S->right->color == BLACK){
+                S->color = RED;
+                N = N->parent;
+            }
+            else{
+                // check if sibling is black, but right child is black
+                // if so, set left child to black as well
+                // recolor S to RED
+                // right rotate S to maintain structure
+                if(S->right->color == BLACK){
+                    S->left->color = BLACK;
+                    S->color = RED;
+                    RightRotate(S);
+                    S = N->parent->right;
+                }
+                // check if sibling is black, but right child is red
+                // if so, recolor sibling to its parent color
+                // set parent color to BLACK
+                // set sibling right child to BLACK
+                // left rotate parent to maintain structure
+                S->color = N->parent->color; 
+                N->parent->color = BLACK;
+                S->right->color = BLACK;
+                LeftRotate(N->parent);
+                N = root;
+            }
+        }
+        // check if N is right child
+        // if so, grab sibling Node
+        else{
+            Node* S = N->parent->left;
+            // check if sibling is RED
+            // if so, recolor sibling and parent
+            // right rotate parent to maintain structure
+            // reconnect parent's old left child to arg Node N
+            if(S->color == RED){
+                S->color = BLACK;
+                N->parent->color = RED;
+                RightRotate(N->parent);
+                S = N->parent->left;
+            }
+            // check if sibling is black and both children are black
+            // if so, recolor red and move arg Node N up a level to continue fixing
+            if(S->color == BLACK && S->right->color == BLACK && S->left->color == BLACK){
+                S->color = RED;
+                N = N->parent;
+            }
+            else{
+                // check if sibling is black, but left child is black
+                // if so, set right child to black as well
+                // recolor S to RED
+                // left rotate S to maintain structure
+                if(S->left->color == BLACK){
+                    S->right->color = BLACK;
+                    S->color = RED;
+                    LeftRotate(S);
+                    S = N->parent->left;
+                }
+                // check if sibling is black, but left child is red
+                // if so, recolor sibling to its parent color
+                // set parent color to BLACK
+                // set sibling left child to BLACK
+                // right rotate parent to maintain structure
+                S->color = N->parent->color;
+                N->parent->color = BLACK;
+                S->left->color = BLACK;
+                RightRotate(N->parent);
+                N = root;
+            }
+        }
+    }
+    // recolor arg Node N to BLACK to eliminate extra black
+    N->color = BLACK;
 }
 
 // RB_Delete()
-void RB_Delete(Node* N);
+void Dictionary::RB_Delete(Node* N){
+    // set Node y as arg Node N which will be deleted
+    Node* y = N; 
+    // create Node x as replacement node
+    Node* x;
+    // save deleted Node's original color
+    int y_og = y->color;
+    // check if arg Node has no left child
+    // if so, replace N with its right child
+    if(N->left == nil){
+        x = N->right;
+        RB_Transplant(N, x);
+    }
+    // check if arg Node has no right child
+    // if so, replace N with its left child
+    else if(N->right == nil){
+        x = N->left;
+        RB_Transplant(N, x);
+    }
+    // if arg Node N has two children
+    else{
+        // find N's sucessor and store its color
+        // save arg Node N's right child
+        y = findMin(N->right);
+        y_og = y->color;
+        x = y->right;
+        // check if y's parent is N
+        // if so, reconnect x with sucessor
+        if(y->parent == N){
+            x->parent = y;
+        }
+        // if successor is not directly connected to N
+        // replace y with its right child
+        // set y's right child as N's right child
+        else{
+            RB_Transplant(y, y->right);
+            y->right = N->right;
+            y->right->parent = y;
+        }
+        // replace N with successor y
+        RB_Transplant(N, y);
+        // reconnect successor's left subtree
+        y->left = N->left;
+        y->left->parent = y;
+        // assign successor the original color of N
+        y->color = N->color;
+    }
+    // check if deleted Node was BLACK
+    // if so, fix potential red-black violations
+    if(y_og == BLACK){
+        RB_DeleteFixUp(x);
+    }
+    // delete arg Node N after fix up
+    delete N;
+}
 
 // Class Constructors & Destructors ----------------------------------------
 
@@ -376,6 +572,7 @@ Dictionary::Dictionary(const Dictionary& D){
     nil->parent = nil;
     nil->left = nil;
     nil->right = nil;
+    nil->color = BLACK;
     root = nil;
     current = nil;
     num_pairs = 0;
@@ -515,6 +712,8 @@ void Dictionary::setValue(keyType k, valType v){
     }
     // increment # of pairs
     num_pairs++;
+    // fix tree structure
+    RB_InsertFixUp(ins);
 }
 
 // remove()
@@ -527,73 +726,13 @@ void Dictionary::remove(keyType k){
     if(N == nil){
         throw std::logic_error("Node containing k not found!");
     }
-    // check if current
+    // check if current Node is the found Node
+    // if so, set current to nil
     if(current == N){
         current = nil;
     }
-    // check if leftmost
-    if(N->left == nil){
-        // check if root
-        if(N == root){
-            root = N->right;
-        }
-        // check if on the left 
-        else if(N == N->parent->left){
-            N->parent->left = N->right;
-        }
-        // else it is on the right
-        else {
-            N->parent->right = N->right;
-        }
-        // reconnect child of Node being deleted to parent of deleted
-        if(N->right != nil){
-            N->right->parent = N->parent;
-        }
-    }
-    // check if rightmost
-    else if(N->right == nil){
-        // check if root
-        if(N == root){
-            root = N->left;
-        }
-        // check if on the left 
-        else if(N == N->parent->left){
-            N->parent->left = N->left;
-        }
-        // else it is on the right 
-        else {
-            N->parent->right = N->left;
-        }
-        // reconnect child of Node being deleted to parent of deleted
-        if(N->left != nil){
-            N->left->parent = N->parent;
-        }
-    }
-    // check if in middle of BST
-    else{
-        // find successor and overwrite found Node with its info
-        Node* S = findMin(N->right);
-        N->key = S->key;
-        N->val = S->val;
-        // check if on the left
-        if(S == S->parent->left){
-            S->parent->left = S->right;
-        }
-        // else on the right 
-        else {
-            S->parent->right = S->right;
-        }
-        // reconnect child of Node being deleted to parent of deleted
-        if(S->right != nil){
-            S->right->parent = S->parent;
-        }
-        // delete successor and decrement # of pairs
-        delete S;
-        num_pairs--;
-        return;
-    }
     // delete found Node and decerement # of pairs
-    delete N;
+    RB_Delete(N);
     num_pairs--;
 }
 
