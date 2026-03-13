@@ -10,7 +10,8 @@ Dictionary.h - Header file for Dictionary ADT
 Dictionary.cpp  - Implementation file for Dictionary ADT
 DictionaryTest.cpp - Self-created tests for Dictionary ADT functions
 Words.cpp - Top-level file for Dictionary ADT
+WordFrequency.cpp - Top-level file for Dictionary ADT
 Makefile - Makefile for Dictionary ADT
 
 AI Chat Log URLS
-Dictionary.cpp - 
+Dictionary.cpp - https://chatgpt.com/c/69b2f383-0264-8328-9be8-b236102160a8
